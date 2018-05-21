@@ -1,18 +1,15 @@
+// ** Parameters **//
 
-/**
-
-	Parameters
-
-*/
 var viewer;
 var scene;
 var camera;
-
 
 var flickrPicturesNumber = 1000;
 
 //handler de dessin
 var drawingHandler;
+
+// ** Non Vue Methods **//
 
 /**
 	Get la position du regard de la camera
@@ -104,6 +101,7 @@ function addPinToScene(name, auteur, type, content, camPosition, pins, scale, da
 	return entity;
 };
 
+
 /**
 	fonction permettant de retour de X element aléatoire dans un array
 
@@ -129,14 +127,13 @@ function getRandomItems(arr, items) {
   return ret;
 }
 
+
 /**
 	Affiche la description d'une feature en fonction des information présente
 
 	@param feature : feature picked
 */	
-
 function addScreenshotDescription(feature,category){
-	console.log(feature)
 	var data ={
 		cat:category,
 		author:feature._auteur,
@@ -145,18 +142,14 @@ function addScreenshotDescription(feature,category){
 		content:feature._userDescription,
 		title:feature._title
 	}
-
 	Event.$emit('fireDisplayDescription', data);
 };
 
-
+// ** Vue Methods **//
 
 export default {
-	/**
 
-		Constructor
-
-	*/
+	// ** Constructor **//
 
 	/**
 		Parameter initialisation
@@ -181,10 +174,13 @@ export default {
 		flickrPicturesNumber = number;
 	},
 
+	// ** Methods **//
+
 	/**
 		Take a screenshot of the canvas and add a pin's within the scene
 
 		@emit : event pour ajouter la description au screen 
+		@return null : if the camera doesn't aim the scene
 	*/
 	takeScreen() {
 		//Capture l'image de l'écran
@@ -200,16 +196,19 @@ export default {
 			alert("Ne regardez pas en l'air =)");
 			return;
 		}
-
 		//Ajout le pins à la carte
 		var entity = addPinToScene("Copie d'écran utilisateur", 'Unknown', 'UserScreen', screen, camlook, 'public/icons/user_screen.png', 0.1);	
 
-
 		//Event pour faire un appel rest sur l'url flickR
 		Event.$emit('fireAddDescription', entity);
-
 	},
 
+	/**
+		add a user uploaded picture within the scene
+	
+		@param picture : picture uploaded (get by an event)
+		@return null : if the camera doesn't aim the scene
+	*/
 	addPicture(picture){
 	    //recuperation de la position du regard de la camera
 		var [lat, lon, height] = cameraLookingAt();
@@ -221,11 +220,18 @@ export default {
 			alert("Ne regardez pas en l'air =)");
 			return;
 		}
-		console.log(picture)
 		//Ajout le pins à la carte
 		var entity = addPinToScene("Image importée utilisateur", 'Unknown', 'UserPicture', picture, camlook, 'public/icons/image.png', 0.06);	
 	},
 
+	/**
+		add a user comment within the scene
+	
+		@param name : name of the user
+		@param email : email of the user
+		@param comment : comment of the user
+		@return null : if the camera doesn't aim the scene
+	*/
 	addCom(name,email,comment){
 	    //recuperation de la position du regard de la camera
 		var [lat, lon, height] = cameraLookingAt();
@@ -242,9 +248,7 @@ export default {
 		var entity = addPinToScene("Commentaire utilisateur", name, 'UserComment', comment, camlook, 'public/icons/comment.png', 0.06);	
 	},
 
-	/**
-	    		__________ Handlers __________
-	**/
+	// ** Handlers **//
 
 	/**
 		Ajout de l'handler qui console les coordonnées de la souris pour le mode débug
@@ -263,8 +267,6 @@ export default {
 
                 var longitudeString = Cesium.Math.toDegrees(cartographic.longitude);
                 var latitudeString = Cesium.Math.toDegrees(cartographic.latitude);
-		    	console.log(latitudeString,longitudeString,cartographic.height)
-				console.log(viewer.camera)
 			}
 		}, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 	},
@@ -357,9 +359,7 @@ export default {
 
 		        // Highlight newly selected feature
 		        pickedFeature.color = Cesium.Color.LIME;
-		        // Set feature infobox description
-		        
-		        //TODO Créer une nouvelle fenetre dans la scène plutot qu'utilisé celui par défaut cesium 
+		        // Set feature infobox description 
 		        
 		        var featureName = pickedFeature.getProperty('name');
 
@@ -479,7 +479,11 @@ export default {
       	}
 	},
 
+	/**
+		Add historic pictures to the scene 
 
+		@param photos : (obj) un set d'images
+	*/
 	addHistoryContext(photos){
 		for (var i = 0; i < photos.length; i++){
 			var pic = photos[i];

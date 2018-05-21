@@ -1,23 +1,18 @@
 <template lang="jade">
 #float
-	//div(v-show='isDescriptionViz')
-		a.button.is-danger.is-rounded.adddesciptionbouton(@click='addDescription') Ajout Description
-		a.button.is-text.nonedesciptionbouton(@click='isDescriptionViz=false') Aucune
-
+	//Carte Open Layers
 	#ol(v-show='is2DMapsMode')
 		#miniplan.oplmaps.add-visible
 		a.button.bottom-position(@click='is2DMapsMode=false;isStreetViewMode=true;initSvMap()')
 			span.icon.is-small
 				i.fas.fa-street-view
+
+	// Street view 				
 	#sv(v-show='isStreetViewMode')
 		#streetview.add-visible.svpanel
 		a.button.bottom-position(@click='is2DMapsMode=true;isStreetViewMode=false;initSvMap()')
 			span.icon.is-small
 				i.fas.fa-map
-
-	//.contextmenu.colomns
-		a.tooltip(v-for='icon in icons', :data-tooltip='icon.atooltip', @click='icon.action')
-			v-icon.shortcuts.is-small.screenshot.column.is-4 {{icon.name}}
 </template>
 
 <script>
@@ -43,10 +38,6 @@
 			}		
 		},
 		mounted(){
-
-			this.initOlMap();
-			//this.initSvMap();
-
 			  //Maj de la carte en fonction de la position et orientation de la caméra : maj du marker 
 			  Event.$on('Update2Dmap',(camPosition, camDirection, azimut) => {
 			  	this.currentCameraPositionLat = camPosition[1];
@@ -54,9 +45,6 @@
 			  	this.currentCameraDirectionLat = camDirection[0];
 			  	this.currentCameraDirectionLon = camDirection[1];
 			  	this.currentCameraPositionAz = azimut;
-			  	
-			  	console.log('pos : ', this.currentCameraPositionLat, this.currentCameraPositionLon)
-			  	console.log('dir : ', this.currentCameraDirectionLat, this.currentCameraDirectionLon)
 			  	
 			  	map.getView().setCenter(ol.proj.fromLonLat([this.currentCameraPositionLon,this.currentCameraPositionLat]));
 			  	iconFeature.setGeometry(new ol.geom.Point(new ol.proj.transform([this.currentCameraPositionLon,this.currentCameraPositionLat], 'EPSG:4326', 'EPSG:3857')));
@@ -69,12 +57,6 @@
 			  		heading: this.currentCameraPositionAz,
 	                pitch: 0 	
 	            })
-				  
-				 /*if (isStreetViewMode){
-				  	map.getView().setCenter(ol.proj.fromLonLat([this.currentCameraPositionLon,this.currentCameraPositionLat]));
-				  	iconFeature.setGeometry(new ol.geom.Point(new ol.proj.transform([this.currentCameraPositionLon,this.currentCameraPositionLat], 'EPSG:4326', 'EPSG:3857')));
-				  	iconFeature.getStyle().getImage().setRotation(this.currentCameraPositionAz+Math.PI/2);
-				  }*/
 			  });
 
 			  				/* Add OSM layers */
@@ -85,7 +67,8 @@
 		      layers: [
 		        new ol.layer.Tile({ 
 		          source: new ol.source.XYZ({ 
-		              url:'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png',//http://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+		              url:'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png',
+		              //http://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
 		          }),
 		          opacity: 1
 		        })
@@ -96,9 +79,6 @@
 		        zoom: 15
 		      })
 	       });
-
-
-
 
 			  //save position and set map center
 			  var iconFeature = new ol.Feature({
@@ -126,14 +106,6 @@
 			  });
 			  map.addLayer(vectorLayer);
 
-			  //Permet d'ajouter une description au screenshot
-			  /*Event.$on('fireAddDescription', ent => {
-				console.log(ent)
-				this.current_entity = ent;
-				this.isDescriptionViz = true;
-				console.log(this.isDescriptionViz )
-			  });*/
-
 				var panorama = new google.maps.StreetViewPanorama(
 	            	document.getElementById('streetview'), {
 	              		position: {lat: this.currentCameraPositionLat, lng: this.currentCameraPositionLon},
@@ -158,15 +130,6 @@
 				Event.$emit('fireTakeScreenShot');
 				console.error('fireTakeScreenShot')
 			},
-			addDescription(){
-				alert('Ajouté')
-			},
-			initSvMap(){
-
-			},
-			initOlMap(){
-			}
-
 		}
 	}
 </script>

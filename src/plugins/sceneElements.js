@@ -1,8 +1,4 @@
-/**
-
-	Parameters
-
-*/
+// ** Parameters **//
 
 //Scene
 var viewer;
@@ -21,11 +17,7 @@ var name3d;
 var terrainloaded;
 
 
-/**
-
-	Private Methods
-
-*/
+// ** Non Vue Methods **//
 
 /**
 	Ajout le modèle numérique de terrain à la scène
@@ -98,7 +90,7 @@ function addVegetation() {
 }
 
 /**
-	Ajout de la végétation à la scène
+	Ajout des toponymes à la scène
 */
 function addToponymes() {
 		//création du jeu de données
@@ -120,11 +112,8 @@ function addToponymes() {
 		var names = scene.primitives.add(name3d)
 }
 
-/**
+// ** Vue Methods **//
 
-	Exported Functions
-
-*/
 export default {
 	// ** Getters & Setters ** //
 
@@ -136,6 +125,8 @@ export default {
 	getCesiumViewer(){
 		return viewer;
 	},
+
+	// ** Methods ** //
 
 	/**
 		Initialisation de la scène cesium dans une div
@@ -155,11 +146,6 @@ export default {
 
 		imageryLayers.removeAll();
 
-	/*	Cesium.BingMapsApi.defaultKey = "Aig5SkZ4pNMN8b4rX-RUH2c_95mK-wjb4WL9k50K51faErEGnNsxgpWHXiqS3Rhe";
-		imageryLayers.addImageryProvider(new Cesium.BingMapsImageryProvider({
-		    url : 'https//dev.virtualearth.net',
-		    enablePickFeatures: false
-		}));*/
 		var rectangle = Cesium.Rectangle.fromDegrees(5.013926957923385, 45.35600133779394, 11.477436312994008, 48.27502358353741)
 	    imageryLayers.addImageryProvider(new Cesium.UrlTemplateImageryProvider({
 	        url: '//wmts{s}.geo.admin.ch/1.0.0/ch.swisstopo.swissimage-product/default/current/4326/{z}/{x}/{y}.jpeg',
@@ -174,12 +160,6 @@ export default {
 	        rectangle: rectangle
 	    }));
 
-		//Ajout du fond de plan
-		/*imageryLayers.addImageryProvider(new Cesium.ArcGisMapServerImageryProvider({
-		    url : '//services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer',
-		    enablePickFeatures: false
-		}));*/
-
 		//Ajout des ombres
 		var shadowMap = viewer.shadowMap;
 		shadowMap.maxmimumDistance = 500.0;
@@ -191,8 +171,6 @@ export default {
 
 		//Suppression des crédit
 		scene.globe.depthTestAgainstTerrain = true;
-		//scene.frameState.creditDisplay._imageContainer.style.display = 'none';
-		//scene.frameState.creditDisplay._textContainer.style.display = 'none';
 
 		//Ajout de la détection avec le terrain
 		scene.screenSpaceCameraController.enableCollisionDetection = true;
@@ -245,9 +223,6 @@ export default {
 				helper.removeAll();
 			}
 		});
-           
-		
-
 	},
 
 
@@ -357,6 +332,9 @@ export default {
 		viewer.clock.currentTime = Cesium.JulianDate.fromDate(juldate)
 	},
 
+	/**
+		Add building grappes for grandson project
+	*/
 	sketchesHeight(){
 		var hauteur_etage = 2.5
 
@@ -429,8 +407,6 @@ export default {
 		        shadows:Cesium.ShadowMode.ENABLED
 		    }
 		});
-
-
 	}
 }
 

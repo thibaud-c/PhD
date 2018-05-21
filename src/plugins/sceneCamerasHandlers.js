@@ -1,8 +1,5 @@
-/**
+// ** Parameters ** //
 
-	Parameters
-
-*/
 //Scene
 var viewer;
 var scene;
@@ -31,12 +28,7 @@ var flags = {
 //Speed of the camera
 var cameraSpeed= 30 ;
 
-/**
-
-	Private Methods
-
-*/
-
+// ** Non Vue Methods ** //
 
 /**
 	Getter :> récupère les information caméra en deg lon, lat, altitude
@@ -213,11 +205,8 @@ function getFlagForKeyCode(keyCode) {
 };
 
 
-/**
+// ** Vue Methods ** //
 
-	Exported Functions
-
-*/
 export default {
 	// ** Constructor ** //
 
@@ -314,6 +303,4 @@ export default {
 	    },)		
 	    movingAroundHandler();
 	}
-
-
 }

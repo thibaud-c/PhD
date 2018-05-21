@@ -3,7 +3,6 @@
 #AppRootcolumns.rootapp.has-navbar-fixed-bottom
   cesiumcontainer.cesium.is-widescreen.full  
   infoSidebar
-  //mainmenu.menupanel
   floatingoptions
   quickMenu.is-clickable.add-visible(:menu-count='count_unlock_menu()', :icon-class='get_unlock_icons()', :menu-url-list='get_unlock_actions()', :position='position', :backgroundColor='color')
   menuScene(v-show='is_menu_active(0)')
@@ -12,31 +11,10 @@
   menuSondage(v-show='is_menu_active(3)')
 
 
-  //article.message.is-small.columns.is-centered.is-primary.add-border-up
-    span.column.is-1.add-visible
-      .message-header.has-text-weight-bold.is-size-7.thematic-headers {{menuname}} 
-        button.delete.is-small(aria-label="delete")
-      
-
-  //.columns.is-fluid.is-center.put-at-bottom
-    .dropdown.is-up.add-visible.is-centered.is-active.column.is-center.is-offset-3
-      .dropdown-trigger
-        a.button.is-rounded.is-focused.thematic-bottom-menu(aria-haspopup='true', aria-controls='dropdown-menu')
-          span.icon.is-small
-            i.fa.fa-filter.fa-sm.fa-inverse(aria-hidden='true') 
-          span.has-text-white.has-text-weight-semibold Layers
-
-      #dropdown-menu.dropdown-menu(role='menu')
-        .dropdown-content.thematic-sub-menu
-          .dropdown-item
-            .field
-              input.is-checkradio.has-background-color.is-circle.is-info(id="exampleCheckbox", type="checkbox", name="exampleCheckbox", checked="checked")
-              label.has-text-white(for="exampleCheckbox") Check me
 </template>
 
 <script>
   import cesiumcontainer from './vues/cesiumCpt.vue'
-  import mainmenu from './vues/BottomMenuCpt.vue'
   import floatingoptions from './vues/FloatingMenuCpt.vue'
   import quickMenu from './vues/QuickMenu.vue'
   import menuScene from './vues/MenuSceneCpt.vue'
@@ -50,7 +28,6 @@
   export default {
     components : { 
       // liste des composants utilisés dans la div principale
-      mainmenu,
       floatingoptions,
       cesiumcontainer,
       quickMenu,

@@ -69,7 +69,7 @@
           this.informationAuthor = data.author;
           this.informationDate = data.date.toDateString();
           this.informationContent = data.content;
-          console.log(data)
+
           if (data.type === 'UserComment'){
 
               this.isInformationImage=false;
@@ -87,7 +87,7 @@
           this.previzPositionX=Math.floor(pos.x+5)+'px';
           this.previzPositionY=Math.floor(pos.y+5)+'px';
           this.previzContent=content;
-          console.log(type)
+
           if (type==="UserComment"){
             this.isPrevizImage = false;
             this.isPrevizText = true;

@@ -1,31 +1,6 @@
 <template lang="jade">
-  <!-- description du composant cesium et attribution de l'id -->
+  // description du composant cesium et attribution de l'id
   #cesiumRoot
-    .card.descrition(v-show='isDescriptionVisible')
-      .card-image
-        figure.image.is-4by3
-          img(:src='descriptionurl', alt='Placeholder image')
-      .card-content
-        .media.is-mobile
-          .media-content.is-left
-            p.title.is-4 {{ descriptiontitle }}
-            p.subtitle.is-6 @auteur
-          br
-          nav.level.is-right
-            .level-left
-              a.level-item
-                span.icon.is-small
-                  i.fas.fa-reply
-              a.level-item
-                span.icon.is-small
-                  i.fas.fa-heart
-        .content
-          | une description 
-          | sur plusieurs lignes ...
-          br
-          time(datetime='2016-1-1') 11:09 PM - 1 Jan 2016
-      a.delete.is-small.closedescription(@click='isDescriptionVisible=false')
-
 </template>
 
 <script>
@@ -122,14 +97,6 @@
           scElements.layersDrawHide(layers);
         });
 
-        // ** Display description ** //
-
-        /*Event.$on('fireDisplayDescription',(info) => {
-          this.descriptiontitle=info[0]
-          this.descriptionurl=info[1]
-          this.isDescriptionVisible=true;
-        });*/
-
         // ** Lance un appel rest FlickR ** //
 
         Event.$on('fireRestApi', (method, url, options) => {
@@ -211,16 +178,14 @@
 </script>
 
 <style>
-.cesiumcontainer{
-  position:fixed;
-  top:0;
-  left:0;
-  height:70%;
-  width:100%;
-}
-.cesium-viewer-bottom{
-  display:none;
-}
-
-
+  .cesiumcontainer{
+    position:fixed;
+    top:0;
+    left:0;
+    height:70%;
+    width:100%;
+  }
+  .cesium-viewer-bottom{
+    display:none;
+  }
 </style>
