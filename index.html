@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MockUp 3D - Cesium</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Import Cesium API-->
+    <script type='text/javascript' src='node_modules/cesium/Build/Cesium/Cesium.js'></script>
+    <script type='text/javascript' src='node_modules/cesium-draw/DrawHelper.js'></script>
+    <link rel="stylesheet" type="text/css" href="node_modules/cesium-draw/DrawHelper.css"/>
+    <link rel="stylesheet" type="text/css" href="node_modules/cesium/Build/CesiumUnminified/Widgets/widgets.css"/>
+
+    <!--Import Bulma-->
+    <link rel="stylesheet" type="text/css" href="node_modules/bulma/css/bulma.css" />
+    <link rel="stylesheet" type="text/css" href="node_modules/bulma-extensions/bulma-slider/bulma-slider.css"/>
+    <link rel="stylesheet" type="text/css" href="node_modules/bulma-extensions/bulma-checkradio/bulma-checkradio.css"/>
+    <link rel="stylesheet" type="text/css" href="node_modules/bulma-extensions/bulma-carousel/bulma-carousel.css"/>
+    <link rel="stylesheet" type="text/css" href="node_modules/bulma-extensions/bulma-badge/bulma-badge.css"/>
+    <link rel="stylesheet" type="text/css" href="node_modules/bulma-extensions/bulma-tooltip/bulma-tooltip.css"/>
+    <link rel="stylesheet" type="text/css" href="node_modules/bulma-utilities/css/bulma-utilities.css"/>
+
+    <!--Import css autre-->
+    <link rel="stylesheet" href="node_modules/vue2-animate/dist/vue2-animate.min.css">
+    <link rel="stylesheet" href="node_modules/vue-loaders/dist/vue-loaders.css">
+    <script type="text/javascript" src="node_modules/vue-loaders/dist/vue-loaders.es.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+
+    <!--Import Vue modules-->
+    <script type='text/javascript' src='node_modules/axios/dist/axios.js'></script>
+
+
+    <!--Import OpenStreetMap Api-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.4/ol.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.4/ol.css" type="text/css">
+
+    <!--Import service google-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwRebqBL1REV_t1Cse_l7PGbeCEb7vQRs"></script>
+
+    <!--Import Icons-->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" href="public/icons/home.png" sizes="32x32">
+  </head>
+  <body>
+    <!--Root de l'application vue pour rattacher les composants -->
+    <div id="App"></div>
+    <script src="./dist/build.js"></script>
+
+
+  </body>
+</html>
