@@ -1,0 +1,26 @@
+[
+	{
+		"text":"Espace végétalisé",
+		"icon":"fas fa-tree",
+		"id":"0",
+        "isActive":true
+	},
+	{
+		"text":"Espace bâti",
+		"icon":"far fa-building",
+		"id":"1",
+        "isActive":true
+	},
+	{
+		"text":"Espace de vie",
+		"icon":"fas fa-coffee",
+		"id":"2",
+        "isActive":true
+	},
+	{
+		"text":"Autre",
+		"icon":"fas fa-exclamation",
+		"id":"3",
+        "isActive":true
+	}
+]

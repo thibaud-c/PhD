@@ -1,0 +1,24 @@
+[
+	{
+		"text":"Batiments", 
+		"id":"bati3d", 
+		"check":true,
+		"isActive":true
+	},
+	{
+		"text":"Végétation", 
+		"id":"vege3d", 
+		"check":true,
+		"isActive":true
+	},
+	{
+		"text":"Commentaires", 
+		"check":true,
+		"isActive":true
+	},
+    {
+    	"text":"Prévisualisation", 
+    	"check":true,
+		"isActive":true
+	}
+]

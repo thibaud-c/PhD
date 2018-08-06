@@ -1,0 +1,17 @@
+[
+	{
+		"title":"Résumé",
+		"description":"<strong>Pour déposer une idée</strong> sur la carte, commenter ou voter, vous devez au préalable vous connecter, en haut à droite de l’écran avec un courriel (suivez les instructions), un compte Facebook ou un compte Google+ (Gmail).",
+        "isActive":true
+	},
+	{
+		"title":"Participer",
+		"description":"Une fois <strong>connecté</strong> avec votre compte (voir la rubrique « ajouter »), <br>vous pouvez voter favorablement ou défavorablement aux idées déposées sur la carte par d’autres.Le vote est ouvert aussi bien sur les éléments de projet présentés par les acteurs publics, que sur les bulles ajoutées par d’autres internautes.",
+        "isActive":true
+	},
+	{
+		"title":"Contrôles",
+		"description":"<iframe src='https://giphy.com/embed/l1KVcrdl7rJpFnY2s' width='200' height='150' frameBorder='0' class='giphy-embed' allowFullScreen></iframe>",
+        "isActive":true
+	}
+]

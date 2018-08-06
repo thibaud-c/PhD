@@ -1,0 +1,23 @@
+[
+	{
+		"text":"Positif",
+		"icon":"far fa-smile",
+		"color":"success",
+		"id":"0",
+        "isActive":true
+	},
+	{
+		"text":"Neutre",
+		"icon":"far fa-meh",
+		"color":"warning",
+		"id":"1",
+        "isActive":true
+	},
+	{
+		"text":"Négatif",
+		"icon":"far fa-frown",
+		"color":"error",
+		"id":"2",
+        "isActive":true
+	}
+]

@@ -1,0 +1,26 @@
+[
+	{
+		"title":"Capturer l'écran",
+		"icon":"fab fa-instagram",
+		"action":"takescreenshot",
+        "isActive":true
+	},
+	{
+		"title":"Commenter",
+		"icon":"message-plus",
+		"action":"this.addcomment",
+        "isActive":true
+	},
+	{
+		"title":"Dessiner",
+		"icon":"fas fa-pencil-alt",
+		"action":"this.showDrawingPanel",
+        "isActive":false
+	},
+	{
+		"title":"Importer une image",
+		"icon":"fas fa-pencil-alt",
+		"action":"this.uploadpicture",
+        "isActive":true
+	}
+]

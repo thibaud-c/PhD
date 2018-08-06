@@ -1,0 +1,28 @@
+[
+	{ 
+		"text": "Non affichée" , 
+        "id":0,
+		"check":true,
+        "isActive":true
+	},
+    {   
+        "text": "Proposition 1",
+        "id":1, 
+        "check": false,
+        "isActive":true,
+        "location": {
+            "lat":46.516286, 
+            "lon":6.570246
+        }
+    },
+    { 
+        "text": "Proposition 2",
+        "id":2, 
+        "check": false,
+        "isActive":true,
+        "location": {
+            "lat":46.516286, 
+            "lon":6.570246
+        }
+    }
+]

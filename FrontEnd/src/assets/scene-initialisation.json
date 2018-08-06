@@ -1,0 +1,44 @@
+{	"POSITION_INIT":{
+		"lat":46.5189,
+		"lon":6.646
+	},
+	"CAMERA_INIT" :{
+		"destination":{
+			"lat":4367455.095581746,
+			"lon":507674.7099247455,
+			"alt":4605830.606751568
+		},
+		"direction":{
+			"x":-0.7672242106237979,
+			"y":0.636927639791117,
+			"z":0.075433363326895
+		},
+		"up":{
+			"x":0.40014262049722255,
+			"y":0.3834170909952688,
+			"z":0.8323924660845639
+		}
+	},
+	"CESIUM_SCENE_OPTION":{
+		"homeButton": false,
+		"baseLayerPicker":true,
+		"geocoder":false,
+		"selectionIndicator": false,
+		"timeline": false,
+		"fullscreenButton":false,
+		"shadows" : true,
+	    "allowTextureFilterAnisotropic": true,
+	    "scene3DOnly":true,
+	    "animation" : false,
+	    "terrainExaggeration" : 1.0,
+	    "navigationInstructionsInitiallyVisible": false,
+	    "navigationHelpButton": false,
+	    "selectionIndicator" : false,
+	    "contextOptions": {
+    		"webgl": {
+    			"preserveDrawingBuffer": true
+    		}
+		}
+	},
+	"ROOT_CESIUM_DIV":"cesiumRoot"
+}

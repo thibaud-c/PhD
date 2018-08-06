@@ -1,0 +1,9 @@
+{
+	"_comment":"** fickr informations **",
+	"flickR":{
+		"apikey":"YOUR_KEY",
+		"secret":"YOUR_KEY",
+		"url": "https://api.flickr.com/services/rest/"
+	},
+	"API_KEY_GOOGLE":"YOUR_KEY",
+}

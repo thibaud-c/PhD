@@ -1,0 +1,34 @@
+[
+	{
+		"id":0,
+		"name":"Scène 3D",
+		"icon":"fa fa-globe",
+		"container":"scene",
+		"isactive":false,
+		"islock":false
+	},
+	{
+		"id":1,
+		"name":"Projet",
+		"icon":"fa fa-home",
+		"container":"projet",
+		"isactive":false,
+		"islock":false
+	},
+	{
+		"id":2,
+		"name":"Participation",
+		"icon":"fas fa-map-pin",
+		"container":"participation",
+		"isactive":false,
+		"islock":true
+	},
+	{
+		"id":3,
+		"name":"Questionnaire",
+		"icon":"fa fa-edit",
+		"container":"sondage",
+		"isactive":false,
+		"islock":false
+	}
+]
