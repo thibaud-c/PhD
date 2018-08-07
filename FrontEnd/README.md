@@ -19,5 +19,3 @@ npm run build
 ```
 npm run lint
 ```
-
-cd ../backend && NODE_ENV=production node app.js
