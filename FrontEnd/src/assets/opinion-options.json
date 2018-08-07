@@ -1,23 +1,26 @@
 [
 	{
-		"text":"Positif",
-		"icon":"far fa-smile",
+		"text":"Valoriser",
 		"color":"success",
-		"id":"0",
+		"showinfo":false,
+		"description":"blabla une description pour Valoriser",
+		"showlayer":true,
         "isActive":true
 	},
 	{
-		"text":"Neutre",
-		"icon":"far fa-meh",
+		"text":"Conserver",
 		"color":"warning",
-		"id":"1",
+		"showinfo":false,
+		"description":"blabla une description pour Conserver",
+		"showlayer":true,
         "isActive":true
 	},
 	{
-		"text":"Négatif",
-		"icon":"far fa-frown",
+		"text":"Améliorer",
+		"showinfo":false,
+		"description":"blabla une description pour Améliorer",
 		"color":"error",
-		"id":"2",
+		"showlayer":true,
         "isActive":true
 	}
 ]

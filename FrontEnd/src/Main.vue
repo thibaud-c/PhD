@@ -97,6 +97,7 @@ v-app
   SceneOptions(v-show='is_menu_active(0)')
   ProjectOptions(v-show='is_menu_active(1)')
   SurveyForm(v-show='is_menu_active(2)')
+  Legend(v-show='is_menu_active(3)')
 
 
 
@@ -112,6 +113,7 @@ v-app
   import ParticipativeOptions from './pages/ParticipativeOptions.vue'
   import SurveyForm from './pages/SurveyForm.vue'
   import description from './components/descriptions.vue'
+  import Legend from './components/legend.vue'
   
 
 
@@ -134,7 +136,8 @@ v-app
       ParticipativeOptions,
       infoSidebar,
       SurveyForm,
-      description
+      description,
+      Legend
     },
     
     data () {
@@ -307,6 +310,10 @@ v-app
             Event.$emit('fireUpdateDescription', data);
         });
 
+        
+        Event.$on('fireCloseLegend',() => {  
+            this.isDescriptionVisible = false;
+        });
         Event.$on('fireCloseDescription',() => {  
             this.isDescriptionVisible = false;
         });

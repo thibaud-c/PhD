@@ -1,7 +1,7 @@
 <template lang="pug">
 #descriptions
-	v-navigation-drawer.sidebar(v-model='drawer' absolute permanent right hide-overlay clipped)
-		v-tabs(v-model='connexiontab', color='indigo lighten-4', dark, slider-color='yellow' height="30")
+	v-navigation-drawer.sidebar(absolute permanent right hide-overlay clipped)
+		v-tabs(color='indigo lighten-4', dark, slider-color='yellow' height="30")
 			// login tab 
 			v-tab(ripple) {{text.desciption.fr}}
 			v-tab-item  
@@ -17,7 +17,7 @@
 									v-icon(small) {{iconcategorie}}
 								v-flex(xs8 sm4) 
 									.caption.font-weight-light.font-italic {{date}}
-						v-card-media(v-shoW="showimage" :src='picture', height='200px')
+						v-card-media(v-show="showimage" :src='picture', height='200px')
 						br
 						v-textarea(outline name='input-7-4', :value='usercomment' readonly)
 						v-container.pa-2(grid-list-md)

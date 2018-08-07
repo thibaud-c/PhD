@@ -1,26 +1,47 @@
 [
 	{
-		"text":"Espace végétalisé",
-		"icon":"fas fa-tree",
+		"text":"Parc",
+		"icon":"/icons/parc.png",
 		"id":"0",
+		"showinfo":false,
+		"description":"blabla une description pour Valoriser",
+		"showlayer":true,
         "isActive":true
 	},
 	{
-		"text":"Espace bâti",
-		"icon":"far fa-building",
+		"text":"Bâti",
+		"icon":"/icons/building.png",
 		"id":"1",
+		"showinfo":false,
+		"description":"blabla une description pour Valoriser",
+		"showlayer":true,
         "isActive":true
 	},
 	{
-		"text":"Espace de vie",
-		"icon":"fas fa-coffee",
+		"text":"Rue",
+		"icon":"/icons/street.png",
 		"id":"2",
+		"showinfo":false,
+		"description":"blabla une description pour Valoriser",
+		"showlayer":true,
         "isActive":true
 	},
 	{
-		"text":"Autre",
-		"icon":"fas fa-exclamation",
+		"text":"Place",
+		"icon":"/icons/square.png",
 		"id":"3",
+		"showinfo":false,
+		"description":"blabla une description pour Valoriser",
+		"showlayer":true,
+        "isActive":true
+	},
+		{
+		"text":"Autre",
+		"icon":"/icons/other.png",
+		"id":"4",
+		"showinfo":false,
+		"description":"blabla une description pour Valoriser",
+		"showlayer":true,
         "isActive":true
 	}
 ]
