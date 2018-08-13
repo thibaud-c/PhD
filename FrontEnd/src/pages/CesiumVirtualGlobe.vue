@@ -1,27 +1,11 @@
 <template lang="pug">
   // description du composant cesium et attribution de l'id
   #root
-
     #cesiumRoot.cesium-VE(@contextmenu.prevent="showRightMenu")
-    v-menu(v-model='showRMenu' :position-x='xMenu' :position-y='yMenu' absolute offset-y)
-      v-list
-        v-list-tile(v-for='(option, index) in actionlist' :key='index' @click='option.action')
-          v-list-tile-title {{ option.title }}
+    v-menu(v-model='showRMenu' :position-x='xMenu' :position-y='yMenu' absolute offset-y :close-on-content-click="false" max-width="350" offset-overflow transition="scale-transition" max-height="300")
+      addArtifactMenu
 
-    v-navigation-drawer.sidebar(v-model='drawer' absolute permanent right hide-overlay clipped v-show="isCommentActiv")
-      v-list.pa-1(dense)
-        v-list-tile
-          v-list-tile-title.font-weight-bold.subheading {{text.addcom.fr}}
-        commentPanel.pa-2(:xposition="xMenu" :yposition="yMenu")
-    v-navigation-drawer.sidebar(v-model='drawer' absolute permanent right hide-overlay clipped  v-show="isUploadActiv")
-      v-list.pa-1(dense)
-        v-list-tile
-          v-list-tile-title.font-weight-bold.subheading {{text.addpicture.fr}}
-        importPanel.pa-2(:xposition="xMenu" :yposition="yMenu")
-
-            
-
-
+    artifactPanel.pa-2(:xposition="xMenu" :yposition="yMenu" :categorie="categorieIcon" :opinion="opinionColor" v-show="isArtifactActiv")
 
 </template>
 
@@ -36,6 +20,9 @@
   import modeDebug from './../assets/debug-options.json'
   import projectMockups from './../assets/project-propositions.json'
 
+  import opinionOptions from './../assets/opinion-options.json'
+  import categoriesOptions from './../assets/categories-options.json'
+
   //plugin imports
   import scElements from './../js/sceneElements.js'
   import scCameras from './../js/sceneCamerasHandlers.js'
@@ -44,15 +31,14 @@
   import dao from './../js/DataAccessObjects.js'
 
   // Import components
-  import commentPanel from "./../components/comments.vue"
-  import importPanel from "./../components/imports.vue"
-
+  import artifactPanel from "./../components/artifacts.vue"
+  import addArtifactMenu from "./../components/addArtifactMenu.vue"
 
   export default {
       components : { 
         // liste des composants utilisés dans la div principale
-        commentPanel,
-        importPanel
+        artifactPanel,
+        addArtifactMenu
       },
 
       data (){
@@ -64,7 +50,11 @@
                 addpicture:{
                   fr:'Importer une image'
                 },
-            },
+          },
+          opinionOptions:opinionOptions,
+          categoriesOptions:categoriesOptions,
+          categorieIcon:"",
+          opinionColor:"",
           isDescriptionVisible:false,
           descriptionurl:'',
           descriptiontitle:'',
@@ -73,7 +63,7 @@
           xMenu: 0,
           yMenu: 0,
           isCommentActiv: false,
-          isUploadActiv: false,
+          isArtifactActiv: false,
           actionlist:[
             {
               "title":"Capturer l'écran",
@@ -101,6 +91,23 @@
         }
       },
      methods:{
+        get_unlock_opinions(){
+          let opinions = [];
+          let active_opinion = this.opinionOptions.filter(opinion => opinion.isActive);
+          active_opinion.forEach((opinion) => {
+              opinions.push(opinion)
+          })
+          console.log(opinions)
+          return opinions
+        },
+        get_unlock_categories(){
+          let categories = [];
+          let active_categories = this.categoriesOptions.filter(cat => cat.isActive);
+          active_categories.forEach((cat) => {
+              categories.push(cat)
+          })
+          return categories
+        },
         takescreenshot(){
           alert("Scrren")
         },
@@ -108,7 +115,7 @@
           this.isCommentActiv = true;
         },
         uploadpicture(){
-          this.isUploadActiv = true;
+          this.isArtifactActiv = true;
         },
         showRightMenu (e) {
               e.preventDefault()
@@ -131,6 +138,28 @@
         
         console.warn('CesiumVirtualGlobe.vue loaded')
 
+        Event.$on('fireCloseaddArtifactMenu', () => {
+          this.showRMenu=false;
+        });
+
+        Event.$on('fireOpenaddArtifact', (categorie, opinion) => {
+          this.isArtifactActiv=true;
+          this.categorieIcon= categoriesOptions.filter(cat => categorie === cat.text)[0].icon;
+          this.opinionColor= opinionOptions.filter(opi => opinion === opi.text)[0].color;
+        });
+
+        
+        Event.$on('fireCloseArtifactPanel', () => {
+          this.isArtifactActiv= false;
+        });
+
+        Event.$on('fireSetXY', (height,width) => {
+          this.xMenu = width;
+          this.yMenu = height;
+        });
+
+
+        
 
         // ** Scene Initialisation ** //
 
@@ -229,14 +258,13 @@
 
         // ** Add Picture ** //
 
-        Event.$on('fireUploadPicture', pic => {
-          console.log(pic)
-          let position = scControllers.getlonlatfromxy(pic.xposition, pic.yposition-40);
+        Event.$on('fireUploadArtifact', artifact => {
+          let position = scControllers.getlonlatfromxy(artifact.xposition, artifact.yposition-40);
           console.log(position)
-          pic.xposition = position[0];
-          pic.yposition = position[1];
+          artifact.xposition = position[0];
+          artifact.yposition = position[1];
 
-          scControllers.addPicture(pic);
+          scControllers.addNewArtifact(artifact);
         });
         
 
@@ -256,9 +284,6 @@
           this.isCommentActiv= false;
         });
 
-        Event.$on('fireCloseUploadsPanel', () => {
-          this.isUploadActiv= false;
-        });
 
         
         
@@ -318,6 +343,8 @@
         Event.$on('fireUpdateMockup', mockup => {
           scElements.drawMockUp(mockup);
         });
+
+
     }, 
   }
   

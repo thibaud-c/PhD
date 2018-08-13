@@ -64,13 +64,13 @@ function cameraLookingAt() {
 	@param camPosition : (obj) position de lq caméra 
 	@param pins : (string) image du pins à afficher
 	@param scale : (string) echelle du pins
-	@param datetime : date de l'objet si prise avant (Reseau sociaux) 
 
 	@return the entity created
 */
-function addPinToScene(name, auteur, type, content, camPosition, pins, scale, datetime=0){
+
+function addPinToScene(topic, user, color, icon, picture, description, pinposition, scale){
 	//get Info camera
-	var cameraProperties = {
+	let cameraProperties = {
 	  position: camera.position.clone(),
 	  direction: camera.direction.clone(),
 	  up: camera.up.clone(),
@@ -78,23 +78,25 @@ function addPinToScene(name, auteur, type, content, camPosition, pins, scale, da
 	  transform: camera.transform.clone(),
 	  frustum: camera.frustum.clone()
 	};
+	let datetime = new Date();
 
-	if (datetime==0){
-		datetime = new Date();
-	}
+	//reconstruction du chemin relatif de l'icon à partir du /icons/icon_name.png 
+	// 1. récupère icon_name.png -> récupère icon_name
+	let pins = "/icons/billboard/"+icon.split("/")[2].split(".")[0]+"_"+color+".png"
 
 	//Ajout du pinpoint à la scène
-	var pinbuilder = new Cesium.PinBuilder();
-	var entity = ds.entities.add({
-	    //name: name,
+	let pinbuilder = new Cesium.PinBuilder();
+	let entity = ds.entities.add({
 	    //paramètre du pins
-	    _title:name,
-	    _auteur:auteur,
-	    _type:type,
+	    _title:topic,
+	    _author:user,
+	    _opinion:color,
+	    _category:icon,
 	    _camera:cameraProperties,
-	    _userDescription: content,
+	    _userPicture:picture,
+	    _userDescription: description,
 	    _datetime:datetime,
-	    position:camPosition,
+	    position:pinposition,
 	    //definit l'icone
 	    billboard: {
 	        image: pins,
@@ -108,8 +110,7 @@ function addPinToScene(name, auteur, type, content, camPosition, pins, scale, da
 	        material : Cesium.Color.WHITE
     	}*/
 	});
-	console.log(pins)
-	console.log(entity)
+	console.log(Cesium)
 	return entity;
 };
 
@@ -145,15 +146,15 @@ function getRandomItems(arr, items) {
 
 	@param feature : feature picked
 */	
-function addScreenshotDescription(feature,category){
+function addScreenshotDescription(feature){
 	console.log(feature)
 	var data ={
-		cat:category,
-		author:"Jack Black",
+		author:feature._author,
 		date:feature._datetime,
-		type:feature._type,
-		content:feature._userDescription,
-		title:feature._title
+		imageContent:feature._userPicture,
+		descriptionContent:feature._userDescription,
+		opinion:feature._opinion,
+		category:feature._category
 	}
 	Event.$emit('fireDisplayDescription', data);
 };
@@ -309,7 +310,7 @@ export default {
 		if (!height){
 			//position non trouvée
 			console.error('Erreur dans la récupération de la position du commentaire');
-			alert("Ne cliquez pas en l'air =)");
+			alert("Ne cliquez pas en l'air =");
 			return;
 		}
 		var camlook = new Cesium.Cartesian3.fromDegrees(picture.yposition, picture.xposition, height+15);
@@ -317,6 +318,22 @@ export default {
 
 		//Ajout le pins à la carte
 		var entity = addPinToScene("Image importée utilisateur", 'Unknown', 'UserPicture', picture, camlook, '/icons/image2.png', 0.05);	
+	},
+
+	addNewArtifact(artifact){
+		//recuperation de la position du regard de la camera
+	    var height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(artifact.yposition, artifact.xposition));
+		if (!height){
+			//position non trouvée
+			console.error("Erreur dans la récupération de la position de l'artéfact");
+			alert(":( Oh Noo ! <br> J'ai rencontré un problème pour récupérer la position de l'élément ... Pouvez-vous recommencer, s'il vous plait ?");
+			return;
+		}
+		var camlook = new Cesium.Cartesian3.fromDegrees(artifact.yposition, artifact.xposition, height+15);
+		var [lat, lon, height] = cameraLookingAt();
+
+		//Ajout le pins à la carte
+		var entity = addPinToScene("Artifact", artifact.user, artifact.opinion, artifact.category, artifact.picture, artifact.usercomment, camlook,  0.1);
 	},
 
 	/**
@@ -478,9 +495,9 @@ export default {
 	
 		        	addScreenshotDescription(pickedFeature.id,"Element complémentaire d'information");
 
-		        }else if (pickedFeature.id._type==='UserComment'){
+		        }else if (pickedFeature.id._title==='Artifact'){
 
-		        	addScreenshotDescription(pickedFeature.id,"Commentaire utilisateur");
+		        	addScreenshotDescription(pickedFeature.id);
 		        
 		        }else if (pickedFeature.id._type==='FlickR'){
 

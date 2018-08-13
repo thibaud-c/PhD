@@ -13,15 +13,15 @@
 		"icon":"fa fa-home",
 		"container":"projet",
 		"isactive":false,
-		"islock":false
+		"islock":true
 	},
 	{
 		"id":2,
 		"name":"Participation",
-		"icon":"fas fa-map-pin",
+		"icon":"fas fa-map-marker-alt",
 		"container":"participation",
 		"isactive":false,
-		"islock":true
+		"islock":false
 	},
 	{
 		"id":3,

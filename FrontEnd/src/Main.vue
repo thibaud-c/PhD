@@ -7,7 +7,7 @@ v-app
   // Toolbar
   v-toolbar.put-on-top(dark color="error" height="40")
     v-avatar(size="50")
-      img(src="./../public/icons/Lausanne.png")
+      img(src="/icons/Lausanne.png")
     v-toolbar-title.white--text {{ text.title.fr }}
     v-spacer
     v-toolbar-items.sm-and-down
@@ -95,7 +95,7 @@ v-app
 
   // Menus
   SceneOptions(v-show='is_menu_active(0)')
-  ProjectOptions(v-show='is_menu_active(1)')
+  ParticipativeOptions(v-show='is_menu_active(1)')
   SurveyForm(v-show='is_menu_active(2)')
   Legend(v-show='is_menu_active(3)')
 
@@ -137,6 +137,7 @@ v-app
       infoSidebar,
       SurveyForm,
       description,
+      ParticipativeOptions,
       Legend
     },
     
