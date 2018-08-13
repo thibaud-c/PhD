@@ -1,15 +1,10 @@
 <template lang="pug">
 #scene
-	v-flex.bottom-position(xs2 offset-xs2 fuild)
+	v-flex.bottom-position(xs6 offset-xs2 fuild)
 		v-menu(:close-on-content-click="false" max-width="500" offset-overflow transition="scale-transition" max-height="200")
-			v-btn(slot="activator" color="indigo" dark small) {{text.title.fr}}
+			v-btn(slot="activator" color="indigo darken-3" dark small) {{text.title.fr}}
 
 			v-list
-				v-list-tile.pt-3
-
-					// Liste des layers
-					v-list-tile-action
-						v-select(:items="getLayersName()" v-model="activLayers" :label="text.select_layers.fr" small-chips multiple)
 				v-list-tile.pt-3
 
 					// Liste des caméras
@@ -21,54 +16,33 @@
 					v-list-tile-action
 						v-slider(v-model="cameraspeed" append-icon="fas fa-forward" :label="text.speed_camera.fr" max-width="500" :disabled='activCamera!=="Première Personne"')
 
-						
+		// menu de gestion des ombres
 
+		v-menu(origin="center center" :close-on-content-click="false" max-width="500" offset-overflow transition="scale-transition" max-height="200")
+			v-btn(slot="activator" color="indigo darken-3" dark small) {{text.shadow_title.fr}}
+			v-list
 
-	//span.is-centered.add-border-up.add-visible
-		.tag.is-primary.is-small.thematic-S-headers.has-text-weight-bold.is-size-7 {{menuname}}
-			button.delete.is-small(aria-label="delete", @click="camerasMenuVisibility=false;layersMenuVisibility=false;closeMenu()") 
-
-	//.is-center.columns.put-at-bottom
-		.is-fluid.column
-			.dropdown.is-up.add-visible(:class="{ 'is-active': layersMenuVisibility }")
-				.dropdown-trigger
-					a.button.is-rounded.is-focused.thematic-S-bottom-menu(aria-haspopup='true', aria-controls='dropdown-menu', @click="layersMenuVisibility=!layersMenuVisibility;camerasMenuVisibility=false")
-						span.icon.is-small
-							i.fa.fa-filter.fa-inverse.icon-small(aria-hidden='true') 
-						span.has-text-white.has-text-weight-semibold Couches
-						span.icon.is-small
-							i.fas.fa-angle-up.fa-inverse.icon-small(aria-hidden='true') 
-
-				#dropdown-menu.dropdown-menu(role='menu')
-					.dropdown-content.thematic-S-sub-menu.add-padding
-						.field(v-for='box in layers_checkboxes')
-							input.is-checkradio.has-background-color.is-circle.is-info.is-small(:id='box.label', type='checkbox', :name='box.label', :checked='box.check', v-model='box.check', @change='updateVisibleLayers(box.label,box.check)')
-							label.has-text-white(:for='box.label') {{box.label}}
-						hr.dropdown-divider
-
-
-		.is-fluid.column.is-offset-5
-			.dropdown.is-up.add-visible(:class="{ 'is-active': camerasMenuVisibility }")
-				.dropdown-trigger
-					a.button.is-rounded.is-focused.thematic-S-bottom-menu(aria-haspopup='true', aria-controls='dropdown-menu', @click="camerasMenuVisibility=!camerasMenuVisibility;layersMenuVisibility=false")
-						span.icon.is-small
-							i.fa.fa-camera.fa-inverse.icon-small(aria-hidden='true') 
-						span.has-text-white.has-text-weight-semibold Caméras
-						span.icon.is-small
-							i.fas.fa-angle-up.fa-inverse.icon-small(aria-hidden='true') 
-
-				#dropdown-menu.dropdown-menu(role='menu')
-					.dropdown-content.thematic-S-sub-menu.add-padding
-						.field
-							.control.has-icons-left
-								.select.is-small
-									select.thematic-S-select-camera(v-model='cameraSelected', @change='updateCameraSelector')
-										option.thematic-S-select-camera(v-for="cam in cameras", :value='cam.text') {{ cam.text }}
-								.icon.is-left
-									i.fas.fa-eye.fa-inverse.icon-small
-						hr.dropdown-divider
-						.field.thematic-S-label.is-4.reduce-margin Vitesse Caméra 
-						input.slider.centeredslider.is-fullwidth.is-small.is-info.reduce-margin(step='1', min='0', max='100', :value='speedStartingValue', type='range' @change='updateSpeedSlider')
+				// Activation des ombres
+				v-list-tile.pt-2
+					v-list-tile-action
+						v-checkbox(:label="text.shadow_activ.fr" color="indigo darken-3" v-model="isactivShadow" @click='activShadow(isactivShadow)')
+				
+				// datepicker
+				v-list-tile.pt-2
+					v-list-tile-action
+						v-menu(ref="datemenu" :close-on-content-click="false" v-model="isDatePickerActive" :nudge-right="40" :return-value.sync="date" lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px" :disabled='!isactivShadow')
+							v-text-field(color="indigo darken-3"  slot="activator" v-model="date" :label="text.date_selection.fr" prepend-icon="event" readonly :disabled='!isactivShadow')
+							v-date-picker(v-model="date" type="month" no-title scrollable reactive color="indigo darken-3")
+								v-spacer
+								v-btn(flat color="indigo darken-3" @click="$refs.datemenu.save(date);UpdateDateTime()") {{text.ok.fr}}
+				// timepicker
+				v-list-tile.pt-2
+					v-list-tile-action
+						v-menu(ref="timemenu" :close-on-content-click="false" v-model="isTimePickerActive" :nudge-right="40" :return-value.sync="time" lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px" :disabled='!isactivShadow')
+							v-text-field(slot="activator" v-model="time" :label="text.time_selection.fr" prepend-icon="access_time" readonly color="indigo darken-3" :disabled='!isactivShadow')
+							v-time-picker(v-if="isTimePickerActive" v-model="time" @change="$refs.timemenu.save(time);UpdateDateTime()" color="indigo darken-3" format="24hr" no-title)
+								v-spacer
+								v-btn(flat color="indigo darken-3" @click="$refs.datemenu.save(date);UpdateDateTime()") {{text.ok.fr}}
 </template>
 
 <script>
@@ -93,17 +67,41 @@
 		          },
 		          speed_camera:{
 		            fr:'Vitesse de la caméra'
-		          }
+		          },
+		          shadow_title:{
+		            fr:'Ombres portées'
+		          },
+		          shadow_activ:{
+		            fr:'Activer la simulation'
+		          },
+		          date_selection:{
+		            fr:'Sélection de la date'
+		          },
+		          time_selection:{
+		            fr:"Sélection de l'heure"
+		          },
+		          ok:{
+		            fr:"Valider"
+		          },
 		        },
 		        activLayers: [],
 		        activCamera: '',
 		        cameraspeed:30,
 				layersMenuVisibility:false,
 				camerasMenuVisibility:false,
+				date: "2018-05",
+				isDatePickerActive: false,
+				time: "12:00",
+				isTimePickerActive: false,
+				timeStep:'',
+				isactivShadow:false,
+				ombreMenuVisibility:false,
 
 				layers_checkboxes: ['foobar','Batiments','Végétation','Commentaires','Prévisualisation'],
       			scenemenu: false,
 				cameraSelected:'Selection caméra',
+				isActiveShadow:false,
+		        shadowbox:'shadowCheckBox',
 				
 			}		
 		},
@@ -143,7 +141,16 @@
 		      Event.$emit('fireUpdateSpeed', slider.path[0].value);
 		      this.speedStartingValue = slider.path[0].value;
 		      console.error('fireUpdateSpeed :' + slider.path[0].value);
-		    }
+		    },
+		    UpdateDateTime(){
+		        Event.$emit('fireUpdateShadow', this.date, this.time);
+		       console.log('##__EMIT ->  fireUpdateShadow : ' + this.date + ' '+ this.time +'__##')
+		    },
+
+		    activShadow(bool){
+		        Event.$emit('fireActivationShadow', bool);
+		        console.log('##__EMIT ->  fireActivationShadow : ' + bool +'__##')
+		    },
 		},
 		mounted() {
 			console.warn('Chargement de SceneOptions.vue')
@@ -155,6 +162,7 @@
 				this.layersMenuVisibility=false
         		this.closeMenu();
 			});
+
 	  	}
 	}
 </script>

@@ -183,6 +183,9 @@ export default {
 		scene.fog.enabled = true;
 		scene.fog.density = 2.0e-4;
 		scene.shadowMap.enabled = false;
+
+		 // hide infobox
+	    document.getElementsByClassName('cesium-infoBox')[0].style.visibility = "hidden";
 		
 		document.addEventListener('keyup', (event) => {
 
@@ -200,7 +203,9 @@ export default {
 			if (event.keyCode == 109){
 				camera.frustum.fov-=0.01
 			}
-	    }, false);	
+	    }, false);
+
+
 	},
 
 	/**
