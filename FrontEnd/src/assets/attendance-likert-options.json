@@ -1,0 +1,22 @@
+[
+	{
+		"title": "Jamais",
+		"value": "1"
+	},
+	{
+		"title": "Rarement",
+		"value": "2"
+	},
+		{
+		"title": "Parfois",
+		"value": "3"
+	},
+		{
+		"title": "Souvent",
+		"value": "4"
+	},
+		{
+		"title": "Très souvent",
+		"value": "5"
+	}
+]

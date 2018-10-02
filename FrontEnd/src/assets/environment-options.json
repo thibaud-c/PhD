@@ -1,0 +1,17 @@
+{
+	"backend":{
+		"base_url":"http://localhost:1337/"
+	},
+	"database":{
+		"base_url":"http://localhost:5432/",
+		"name":"ppmockup",
+		"pw":"postgres",
+		"user":"postgres"
+	},
+	"Rgeocoder":{
+		"base_url":"https://geocode.xyz/"
+	},
+	"SwissTopoGeocoder":{
+		"base_url":"https://api3.geo.admin.ch/rest/services/api/SearchServer"
+	}
+}

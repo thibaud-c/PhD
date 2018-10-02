@@ -3,33 +3,71 @@
 	v-navigation-drawer.sidebar(absolute permanent right hide-overlay clipped)
 		v-tabs(color='indigo darken-3', dark, slider-color='yellow' height="30")
 			// Description of the user post
-			v-tab(ripple) {{text.desciption.fr}}
+			v-tab(ripple) {{text.description.fr}}
 			v-tab-item  
 				v-card(flat)
-					// Author
-					v-card-title.pb-0.pt-2
-						v-layout(row align-center justify-center)
-								.title.font-weight-bold {{author}}
-								v-avatar.ml-5(size="40" tile :color="opinion")
+					v-card-title.pa-0.pt-2
+						v-layout(row justify-center align-center)
+							v-flex(xs9)
+								// Title
+								v-card-title.pb-0.pt-2
+									.title.font-weight-bold {{title}}
+								// address
+								v-card-title.pb-0.pt-0
+									small.pb-2.font-italic.grey--text {{address}}
+							v-flex(xs3)
+								// category
+								v-avatar(size="60" tile)
 									img(:src='category')
+					
+					// Centrality
+					v-layout(v-show="centrality" align-center justify-center column)
+						v-icon.red--text fas fa-map-marker-alt
+						.subtitle.font-weight-regular.font-italic.grey--text {{text.centrality.fr}}
+					
+					//Retour utilisateur
+					v-card-title.pa-0.pl-1.pt-2
+						v-layout(column justify-center)
+							// Satisfaction
+							v-layout.pb-2(row)
+								span.pa-0.pb-2.grey--text {{text.review.fr}}
+								div(v-for="star in createReview()")
+									v-icon.pl-1(small :class="star.color") {{star.icon}}
+							// fréquentation
+							v-layout(row)
+								span.grey--text {{text.attendance.fr}}
+								div(v-for="plus in createFrequency()")
+									v-icon.pl-1(small :class="plus.color") {{plus.icon}}
+					
+					// Favorite
 					v-card-actions.pa-0
-						// Favorite
-						v-container.pa-1(grid-list-md)
+						v-container.pa-2(grid-list-md)
 							v-layout(wrap justify-center row align-center)
 								v-btn(:class="like ? 'red--text' : ''", icon, @click='like = !like; addlikes()')
-									v-icon favorite
+									v-icon.faa-pulse.animated fas fa-heart
 								.subtitle.font-weight-regular.font-italic {{likenumber}}
+
 					// Picture
-					v-card-media(v-show="showimage" :src='userpicture', height='200px')
+					//v-card-media(v-show="showimage" :src='userpicture', height='200px')
+
 					// Comment
-					v-card-title
-						v-textarea(outline name='input-7-4', :value='usercomment' readonly)
+					v-card-title.pa-1
+						v-textarea(outline name='input-7-4', :value='usercomment' readonly :label="text.description.fr")
+
+					// Frequentation
+					v-card-title.pa-0.pl-2
+						v-layout.pa-0(row justify-start align-center)
+							.grey--text {{text.added.fr}}
+							.grey--text.font-weight-bold.pl-1 {{author}}
+							.grey--text {{text.when.fr}} 
+							.grey--text.font-weight-bold.pl-1 {{date}}.
+
 					// Close window
-					v-card-actions 
-						v-tooltip(bottom)
-							v-btn(flat small color="grey lighten-1" slot="activator")
-								v-icon(small) fas fa-exclamation-triangle
-							span {{text.report.fr}}
+					v-card-actions.pt-4
+						
+						v-btn.ml-2(flat icon small color="grey lighten-1" slot="activator")
+							v-icon(small) fas fa-exclamation-triangle
+						small.pl-2.grey--text {{text.report.fr}}
 						v-spacer
 						v-btn(flat @click="closepaneldescription()" color='indigo darken-3' small) {{text.close.fr}}
 
@@ -74,13 +112,15 @@
 					v-card-actions
 						v-spacer
 						v-btn(flat @click="closepaneldescription()" color='indigo darken-3' small) {{text.close.fr}}
-				
-
 </template>
 
 <script>
+	import 'font-awesome-animation/dist/font-awesome-animation.min.css'
+	
 	// Config imports
-	import opinionOptions from './../assets/opinion-options.json'
+	import categoryOptions from './../assets/categories-options.json'
+	import opinionOptions from './../assets/opinion-likert-options.json'
+	import attendanceOptions from './../assets/attendance-likert-options.json'
 	import categoriesOptions from './../assets/categories-options.json'
 
 	const moment = require('moment');
@@ -91,7 +131,7 @@ export default {
 	data () {
 	  return {
 	  	text:{
-	  		desciption:{
+	  		description:{
             	fr:'Description'
             },
             discussion:{
@@ -106,8 +146,23 @@ export default {
             close:{
             	fr:'Fermer'
           	},
+          	review:{
+            	fr:'Satisfaction : '
+          	},
+          	attendance:{
+            	fr:'Fréquentation : '
+          	},
+          	centrality:{
+          		fr:"Centralité de quatier"
+          	},
           	send:{
           		fr:"Envoyer"
+          	},
+          	added:{
+          		fr : "Ajouté par "
+          	},
+          	when:{
+          		fr : ", le"
           	},
           	require:{
 	            fr:"Ce champs est obligatoire"
@@ -136,6 +191,10 @@ export default {
         like: false,
         likenumber:12,
         opinion:"",
+        address:"",
+        attendace:"",
+        title:"",
+        centrality:"",
         category:"",
         usercomment:"",
         commentvalidation:false,
@@ -167,8 +226,6 @@ export default {
 			this.$refs.form.reset();
 		},
 		addComment(){
-			console.log(this.toggle_none)
-			console.log("HOLA")
 			if (this.$refs.form.validate()) {
 				let color=null;
 				let emoji=null;
@@ -189,7 +246,6 @@ export default {
 
 				let date = new Date();
 
-
 				let com = {
 					user:"Jack Black",
 		        	feedbackIcon:emoji,
@@ -206,9 +262,7 @@ export default {
 			let datetime = moment(date)
 			let curdate = moment(new Date());
 			var duration = moment.duration(curdate.diff(datetime))
-			console.log(duration)
-			console.log(duration._data.days)
-			console.log(duration._data.minutes+" minutes")
+
 			if(duration._data.months>0){
 				return duration._data.months+" mois"
 			}
@@ -224,7 +278,49 @@ export default {
 			if(duration._data.seconds>0){
 				return duration._data.seconds+" secondes"
 			}
-			return "";
+			return "à l'instant";
+		},
+		createReview(){
+			let stars=[];
+
+			for(let i=1; i<=opinionOptions.length; i++){
+				let sclass;
+				if(i<=this.opinion){
+					sclass={
+						icon:"fas fa-star",
+						color:"yellow--text"
+					}
+					stars.push(sclass)
+					continue;
+				}
+				sclass={
+					icon:"fas fa-star",
+					color:"grey--text"
+				}
+				stars.push(sclass)
+			}
+			return stars
+		},
+		createFrequency(){
+			let freqs=[];
+
+			for(let i=1; i<=attendanceOptions.length; i++){
+				let fclass;
+				if(i<=this.attendance){
+					fclass={
+						icon:"fas fa-plus-circle",
+						color:"yellow--text"
+					}
+					freqs.push(fclass)
+					continue;
+				}
+				fclass={
+						icon:"fas fa-plus-circle",
+						color:"grey--text"
+					}
+				freqs.push(fclass)
+			}
+			return freqs
 		}
 	},
 	mounted(){
@@ -233,14 +329,18 @@ export default {
             this.author = data.author;
             this.category = data.category;
 			this.opinion = data.opinion;
-
+			this.title = data.title;
+			this.attendance = data.attendance;
+			this.centrality=  JSON.parse(data.centrality);
+			this.address = data.address;
             this.usercomment = data.descriptionContent;
 
-
-
-     
             let datetime = moment(data.date);
             this.date = datetime.format('DD / MM');
+
+            this.userpicture = URL.createObjectURL(data.picture);
+
+
 
             if (data.cat !== null){
             	this.showimage = false

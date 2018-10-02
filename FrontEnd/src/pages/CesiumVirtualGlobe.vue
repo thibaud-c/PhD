@@ -2,9 +2,6 @@
   // description du composant cesium et attribution de l'id
   #root
     #cesiumRoot.cesium-VE(@contextmenu.prevent="showRightMenu")
-    v-menu(v-model='showRMenu' :position-x='xMenu' :position-y='yMenu' absolute offset-y :close-on-content-click="false" max-width="350" offset-overflow transition="scale-transition" max-height="300")
-      addArtifactMenu
-
     artifactPanel.pa-2(:xposition="xMenu" :yposition="yMenu" :categorie="categorieIcon" :opinion="opinionColor" v-show="isArtifactActiv")
 
 </template>
@@ -13,12 +10,16 @@
   // Import Cesium
   import Cesium from 'cesium/Cesium' 
   require('cesium/Widgets/widgets.css');
+  const axios = require('axios');
 
 
   // Config imports
   import initConfig from './../assets/scene-initialisation.json'
   import modeDebug from './../assets/debug-options.json'
+  import environmentConfig from './../assets/environment-options.json'
   import projectMockups from './../assets/project-propositions.json'
+
+  
 
   import opinionOptions from './../assets/opinion-options.json'
   import categoriesOptions from './../assets/categories-options.json'
@@ -29,6 +30,8 @@
   import scControllers from './../js/sceneControllers.js'
   //Data bases relation imports
   import dao from './../js/DataAccessObjects.js'
+  //Geocoder
+  import geocoder from './../js/geocoder.js'
 
   // Import components
   import artifactPanel from "./../components/artifacts.vue"
@@ -142,13 +145,25 @@
           this.showRMenu=false;
         });
 
-        Event.$on('fireOpenaddArtifact', (categorie, opinion) => {
+        Event.$on('fireOpenaddArtifact', () => {
           this.isArtifactActiv=true;
-          this.categorieIcon= categoriesOptions.filter(cat => categorie === cat.text)[0].icon;
-          this.opinionColor= opinionOptions.filter(opi => opinion === opi.text)[0].color;
         });
 
-        
+        Event.$on('fireUpdate3DCam', (lat,lon) => {
+          //Take zero as height but is balanced during the setcampositionwith tilt which get the current height of the camera
+          let position = scControllers.getSceneCoordinatesfromLonLatHeight(lon, lat, -1)
+          scCameras.setCamPositionWithTilt(position)
+          let zoomLevel = scCameras.detectZoomLevel();
+        });
+
+        Event.$on('fireAboveViewMode', () => {
+          //Camera from above to get an 2D view
+          
+          let position = scCameras.cameraLookingAt();
+          //new Cesium.Cartesian3.fromDegrees(
+          //scCameras.setCamPositionFromAbove(position)
+        });
+
         Event.$on('fireCloseArtifactPanel', () => {
           this.isArtifactActiv= false;
         });
@@ -158,8 +173,18 @@
           this.yMenu = height;
         });
 
+        Event.$on('fireGetAddressFromPixels', (x,y) => {
+          let position = scControllers.getlonlatfromxy(x, y-40);
 
-        
+          let lat = position[0];
+          let long = position[1];
+
+          geocoder.getAdressFromPix(lat,long,environmentConfig.Rgeocoder.base_url);
+        });
+
+        Event.$on('fireSearchAddress', (address) => {
+          geocoder.getPositionfromAddress(address,environmentConfig.SwissTopoGeocoder.base_url);
+        });
 
         // ** Scene Initialisation ** //
 
@@ -248,8 +273,6 @@
           scCameras.setMovingSpeed(speed);
         });
 
-
-
         // ** Taking Screenshots ** //
 
         Event.$on('fireTakeScreenShot', mockup => {
@@ -260,7 +283,7 @@
 
         Event.$on('fireUploadArtifact', artifact => {
           let position = scControllers.getlonlatfromxy(artifact.xposition, artifact.yposition-40);
-          console.log(position)
+
           artifact.xposition = position[0];
           artifact.yposition = position[1];
 

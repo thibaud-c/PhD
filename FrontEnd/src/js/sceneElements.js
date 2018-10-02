@@ -49,7 +49,7 @@ function addDEM() {
 function addBuildings() {
 		//création du jeu de données
 		bati3d = new Cesium.Cesium3DTileset({
-		  url: 'https://vectortiles.geo.admin.ch/ch.swisstopo.swisstlm3d.3d/20170425/tileset.json',
+		  url: 'https://vectortiles0.geo.admin.ch/3d-tiles/ch.swisstopo.swisstlm3d.3d/20180716/tileset.json',
 		  //debugColorizeTiles:true,
 		  castShadows: true,
 		  receiveShadows: true,
@@ -57,7 +57,7 @@ function addBuildings() {
 		})
 		//Ajout d'un style
 		bati3d.style = new Cesium.Cesium3DTileStyle({
-		    //color :  "color('GHOSTWHITE')",
+		    color :  "color('grey')",
 		    meta : {
 		       description : '"Building id has height."'
 		   }
@@ -73,7 +73,7 @@ function addBuildings() {
 function addVegetation() {
 		//création du jeu de données
 		vege3d = new Cesium.Cesium3DTileset({
-		  url: 'https://vectortiles.geo.admin.ch/ch.swisstopo.vegetation.3d/20170630/tileset.json',
+		  url: 'https://vectortiles0.geo.admin.ch/3d-tiles/ch.swisstopo.vegetation.3d/20180716/tileset.json',
 		  castShadows: true,
 		  receiveShadows: true,
 		  show:true
@@ -96,18 +96,26 @@ function addVegetation() {
 function addToponymes() {
 		//création du jeu de données
 		name3d = new Cesium.Cesium3DTileset({
-		  url: 'https://vectortiles.geo.admin.ch/ch.swisstopo.swissnames3d.3d/20170814/tileset.json',
+		  url: 'https://vectortiles0.geo.admin.ch/3d-tiles/ch.swisstopo.swissnames3d.3d/20180716/tileset.json',
 		  castShadows: false,
 		  receiveShadows: false,
-		  show:true
+		  show:true,
+		  label: 'names',
+		  useLabelStyle: true,
 		})
 
 		//Ajout d'un style
 		name3d.style = new Cesium.Cesium3DTileStyle({
 			//color :  "color('STEELBLUE')",
-		   	meta : {
-		       description : '"Toponymes id has height."'
-		   }
+			font:'"italic 32px arial"',
+			labelColor : "color('black')",
+			labelOutlineColor : "color('white', 1)",
+		    labelOutlineWidth : 2,
+		    labelStyle : 2,
+			labelText : "${DISPLAY_TEXT}",
+			heightOffset:150,
+		  	distanceDisplayCondition:'vec2(0, 7500)',
+		  	anchorLineEnabled: false,
 		});
 		//Attache à la scène
 		var names = scene.primitives.add(name3d);

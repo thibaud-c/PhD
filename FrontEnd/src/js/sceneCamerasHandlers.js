@@ -255,6 +255,38 @@ export default {
 	},
 
 	/**
+	Positionnement de la caméra en fonction de coordonnées - lat long height passe en vue du dessus
+
+	@param position : (obj) object contenant la position de la caméra contient des coordonnées destination, direction up ...  
+	*/
+	setCamPositionFromAbove(position) {
+		//Placement de la caméra sur la ville de Lausanne
+		camera.flyTo({
+			destination : position,
+			/*orientation : {
+		        direction : camera.direction,
+		        up : camera.up
+			},*/
+		});
+	},
+
+	/**
+	Positionnement de la caméra en fonction de coordonnées - lat long height garde le tilt de la camera
+
+	@param position : (obj) object contenant la position de la caméra contient des coordonnées destination, direction up ...  
+	*/
+	setCamPositionWithTilt(position) {
+		//Placement de la caméra sur la ville de Lausanne
+		camera.flyTo({
+			destination : position,
+			orientation : {
+		        direction : camera.direction,
+		        up : camera.up
+			},
+		});
+	},
+
+	/**
 		Création d'une caméra fixe à une position données 
 
 		@param coordinates : (obj) object contenant la position de la caméra contient des coordonnées destination, direction up ...  
@@ -303,5 +335,54 @@ export default {
 	        complete:lookingAroundHandler
 	    },)		
 	    movingAroundHandler();
+	},
+
+	detectZoomLevel() {
+		let distance = camera.positionCartographic.height;
+	    let tileProvider = scene.globe._surface.tileProvider;
+	    let quadtree = tileProvider._quadtree;
+	    let drawingBufferHeight = viewer.canvas.height;
+	    let sseDenominator = camera.frustum.sseDenominator;
+
+	    for (let level = 0; level <= 19; level++) {
+	        let maxGeometricError = tileProvider.getLevelMaximumGeometricError(level);
+	        let error = (maxGeometricError * drawingBufferHeight) / (distance * sseDenominator);
+	        if (error < quadtree.maximumScreenSpaceError) {
+	            return level;
+	        }
+	    }
+
+	    return null;
+	},
+
+	/**
+	Get la position du regard de la camera
+
+	@return success : position de la camera lat/lon/height
+	@return false : position non calculée
+	*/
+	cameraLookingAt() {
+
+		// pick le mileu de l'écran (regard camera)
+	    var ray = camera.getPickRay(new Cesium.Cartesian2(
+	        Math.round(viewer.canvas.clientWidth / 2),
+	        Math.round(viewer.canvas.clientHeight / 2)
+	    ));
+
+	    //Calcul la position
+	    let position = viewer.scene.globe.pick(ray, viewer.scene);
+	    //Definit la lat lon hauteur et distance
+	    if (Cesium.defined(position)) {
+	        let cartographic = Cesium.Ellipsoid.WGS84.cartesianToCartographic(position);
+	        let height = cartographic.height;
+	        let range = Cesium.Cartesian3.distance(position, camera.position);
+
+	        let lat = Cesium.Math.toDegrees(cartographic.latitude);
+	        let lon = Cesium.Math.toDegrees(cartographic.longitude);
+	        
+	        return [lat, lon, height]
+	    }else{
+	    	return[0,0,0]
+	    }
 	}
 }

@@ -57,8 +57,8 @@
 
 <script>
   import VueStar from 'vue-star'
-  import './../assets/CSS/animated.css'
-  
+  import './../assets/css/animated.css'
+  import categoriesOptions from './../assets/categories-options.json'
 
 
 

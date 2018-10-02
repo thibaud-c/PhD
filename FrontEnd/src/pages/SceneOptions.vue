@@ -3,25 +3,20 @@
 	v-flex.bottom-position(xs6 offset-xs2 fuild)
 		v-menu(:close-on-content-click="false" max-width="500" offset-overflow transition="scale-transition" max-height="200")
 			v-btn(slot="activator" color="indigo darken-3" dark small) {{text.title.fr}}
-
 			v-list
 				v-list-tile.pt-3
-
 					// Liste des caméras
 					v-list-tile-action
 						v-select(:items="getCamerasName()" :label="text.select_cameras.fr" v-model="activCamera")
 				v-list-tile.pt-3
-
 					// Vitesse caméra
 					v-list-tile-action
 						v-slider(v-model="cameraspeed" append-icon="fas fa-forward" :label="text.speed_camera.fr" max-width="500" :disabled='activCamera!=="Première Personne"')
 
 		// menu de gestion des ombres
-
 		v-menu(origin="center center" :close-on-content-click="false" max-width="500" offset-overflow transition="scale-transition" max-height="200")
 			v-btn(slot="activator" color="indigo darken-3" dark small) {{text.shadow_title.fr}}
 			v-list
-
 				// Activation des ombres
 				v-list-tile.pt-2
 					v-list-tile-action

@@ -99,6 +99,8 @@ v-app
   SurveyForm(v-show='is_menu_active(2)')
   Legend(v-show='is_menu_active(3)')
 
+  //searchBar
+  searchBar.rightposition
 
 
 
@@ -114,6 +116,7 @@ v-app
   import SurveyForm from './pages/SurveyForm.vue'
   import description from './components/descriptions.vue'
   import Legend from './components/legend.vue'
+  import searchBar from './components/searchBar.vue'
   
 
 
@@ -126,6 +129,7 @@ v-app
   import tabsList from './assets/information-tabs.json'
 
   export default {
+    name: 'appmain',
     components : { 
       // liste des composants utilisés dans la div principale
       floatingMaps,
@@ -137,15 +141,15 @@ v-app
       infoSidebar,
       SurveyForm,
       description,
-      ParticipativeOptions,
-      Legend
+      Legend,
+      searchBar
     },
     
     data () {
       return {
         text:{
           title:{
-            fr:'Lausanne Consultation'
+            fr:'Mon quartier, ma ville'
           },
           login:{
             fr:'Se Connecter'

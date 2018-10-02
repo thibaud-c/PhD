@@ -1,57 +1,31 @@
 // ** Parameters **//
 import Cesium from 'cesium/Cesium' 
-var viewer;
-var scene;
-var camera;
-var ds;
-var removeListener;
-var singleDigitPins = new Array(8);
+
+// Config imports
+import categoryOptions from './../assets/categories-options.json'
+import scCameras from './../js/sceneCamerasHandlers.js'
+
+let viewer;
+let scene;
+let camera;
+let ds;
+let removeListener;
+let singleDigitPins = new Array(8);
 
 
-var flickrPicturesNumber = 1000;
+let flickrPicturesNumber = 1000;
 
-var pinBuilder = new Cesium.PinBuilder();
-	    var pin50 = pinBuilder.fromText('50+', Cesium.Color.RED, 48).toDataURL();
-	    var pin40 = pinBuilder.fromText('40+', Cesium.Color.ORANGE, 48).toDataURL();
-	    var pin30 = pinBuilder.fromText('30+', Cesium.Color.YELLOW, 48).toDataURL();
-	    var pin20 = pinBuilder.fromText('20+', Cesium.Color.GREEN, 48).toDataURL();
-	    var pin10 = pinBuilder.fromText('10+', Cesium.Color.BLUE, 48).toDataURL();
+let pinBuilder = new Cesium.PinBuilder();
+	    let pin50 = pinBuilder.fromText('50+', Cesium.Color.RED, 48).toDataURL();
+	    let pin40 = pinBuilder.fromText('40+', Cesium.Color.ORANGE, 48).toDataURL();
+	    let pin30 = pinBuilder.fromText('30+', Cesium.Color.YELLOW, 48).toDataURL();
+	    let pin20 = pinBuilder.fromText('20+', Cesium.Color.GREEN, 48).toDataURL();
+	    let pin10 = pinBuilder.fromText('10+', Cesium.Color.BLUE, 48).toDataURL();
 
 //handler de dessin
-var drawingHandler;
+let drawingHandler;
 
 // ** Non Vue Methods **//
-
-/**
-	Get la position du regard de la camera
-
-	@return success : position de la camera lat/lon/height
-	@return false : position non calculée
-*/
-function cameraLookingAt() {
-
-	// pick le mileu de l'écran (regard camera)
-    var ray = camera.getPickRay(new Cesium.Cartesian2(
-        Math.round(viewer.canvas.clientWidth / 2),
-        Math.round(viewer.canvas.clientHeight / 2)
-    ));
-
-    //Calcul la position
-    var position = viewer.scene.globe.pick(ray, viewer.scene);
-    //Definit la lat lon hauteur et distance
-    if (Cesium.defined(position)) {
-        var cartographic = Cesium.Ellipsoid.WGS84.cartesianToCartographic(position);
-        var height = cartographic.height;
-        var range = Cesium.Cartesian3.distance(position, camera.position);
-
-        var lat = Cesium.Math.toDegrees(cartographic.latitude);
-        var lon = Cesium.Math.toDegrees(cartographic.longitude);
-        
-        return [lat, lon, height]
-    }else{
-    	return[0,0,0]
-    }
-};
 
 
 /**
@@ -68,7 +42,7 @@ function cameraLookingAt() {
 	@return the entity created
 */
 
-function addPinToScene(topic, user, color, icon, picture, description, pinposition, scale){
+function addPinToScene(topic, title, user, category, opinion, attendance, picture, description, address, centrality ,pinposition, scale){
 	//get Info camera
 	let cameraProperties = {
 	  position: camera.position.clone(),
@@ -80,18 +54,22 @@ function addPinToScene(topic, user, color, icon, picture, description, pinpositi
 	};
 	let datetime = new Date();
 
-	//reconstruction du chemin relatif de l'icon à partir du /icons/icon_name.png 
-	// 1. récupère icon_name.png -> récupère icon_name
-	let pins = "/icons/billboard/"+icon.split("/")[2].split(".")[0]+"_"+color+".png"
 
+	//categoriesOptions
+	let cat = categoryOptions.filter(cat => cat.id == category)[0].icon;
+	
 	//Ajout du pinpoint à la scène
 	let pinbuilder = new Cesium.PinBuilder();
 	let entity = ds.entities.add({
 	    //paramètre du pins
-	    _title:topic,
+	    _topic:topic,
+	    _title:title,
 	    _author:user,
-	    _opinion:color,
-	    _category:icon,
+	    _opinion:opinion,
+	    _category:cat,
+	    _attendance:attendance,
+	    _centrality:centrality,
+	    _address:address,
 	    _camera:cameraProperties,
 	    _userPicture:picture,
 	    _userDescription: description,
@@ -99,7 +77,7 @@ function addPinToScene(topic, user, color, icon, picture, description, pinpositi
 	    position:pinposition,
 	    //definit l'icone
 	    billboard: {
-	        image: pins,
+	        image: cat,
 	        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
 	        scale:scale
 	    }/*,
@@ -110,7 +88,6 @@ function addPinToScene(topic, user, color, icon, picture, description, pinpositi
 	        material : Cesium.Color.WHITE
     	}*/
 	});
-	console.log(Cesium)
 	return entity;
 };
 
@@ -123,9 +100,9 @@ function addPinToScene(topic, user, color, icon, picture, description, pinpositi
 	@return : array d'éléments sélectionnés
 */
 function getRandomItems(arr, items) {
-  var ret = [];
-  var indexes = [];
-  var arr_length = arr.length;
+  let ret = [];
+  let indexes = [];
+  let arr_length = arr.length;
   
   // If we don't have enough items to return - return the original array
   if (arr_length < items) {
@@ -133,7 +110,7 @@ function getRandomItems(arr, items) {
   }
   
   while (ret.length < items) {
-    var i = Math.floor(Math.random() * (arr_length-1));
+    let i = Math.floor(Math.random() * (arr_length-1));
     indexes[indexes.length] = i;
     ret[ret.length] = arr[i];
   }
@@ -148,13 +125,17 @@ function getRandomItems(arr, items) {
 */	
 function addScreenshotDescription(feature){
 	console.log(feature)
-	var data ={
+	let data ={
+		title:feature._title,
 		author:feature._author,
 		date:feature._datetime,
 		imageContent:feature._userPicture,
 		descriptionContent:feature._userDescription,
 		opinion:feature._opinion,
-		category:feature._category
+		category:feature._category,
+		attendance:feature._attendance,
+		centrality:feature._centrality,
+		address:feature._address,
 	}
 	Event.$emit('fireDisplayDescription', data);
 };
@@ -187,7 +168,7 @@ function customStyle() {
     }
 
     // force a re-cluster with the new styling
-    var pixelRange = ds.clustering.pixelRange;
+    let pixelRange = ds.clustering.pixelRange;
     ds.clustering.pixelRange = 0;
     ds.clustering.pixelRange = pixelRange;
 };
@@ -213,9 +194,9 @@ export default {
 		ds.clustering.enabled = true
 		viewer.dataSources.add(ds)
 
-	    var pixelRange = 15;
-	    var minimumClusterSize = 3;
-	    var enabled = true;
+	    let pixelRange = 15;
+	    let minimumClusterSize = 3;
+	    let enabled = true;
 
 	    ds.clustering.enabled = enabled;
 	    ds.clustering.pixelRange = pixelRange;
@@ -253,20 +234,31 @@ export default {
 	},
 
 	getlonlatfromxy(x,y){
-		var ellipsoid = Cesium.Ellipsoid.WGS84;
-	    var clickposition = new Cesium.Cartesian2(x, y);
-        var cartesian = camera.pickEllipsoid(clickposition, ellipsoid);
+		let ellipsoid = Cesium.Ellipsoid.WGS84;
+	    let clickposition = new Cesium.Cartesian2(x, y);
+        let cartesian = camera.pickEllipsoid(clickposition, ellipsoid);
         if (cartesian) {         
 
-            var ray = viewer.camera.getPickRay(clickposition);
-            var cartesian = viewer.scene.globe.pick(ray, viewer.scene);
-            var cartographic = Cesium.Ellipsoid.WGS84.cartesianToCartographic(cartesian);
+            let ray = viewer.camera.getPickRay(clickposition);
+            let cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+            let cartographic = Cesium.Ellipsoid.WGS84.cartesianToCartographic(cartesian);
 
-            var longitudeString = Cesium.Math.toDegrees(cartographic.longitude);
-            var latitudeString = Cesium.Math.toDegrees(cartographic.latitude);
+            let longitudeString = Cesium.Math.toDegrees(cartographic.longitude);
+            let latitudeString = Cesium.Math.toDegrees(cartographic.latitude);
             return [latitudeString,longitudeString]
 		}
 	 	return 0
+	},
+
+	//if height == -1 take the current height of the camera, if not, take the altitude + height
+	getSceneCoordinatesfromLonLatHeight(lon, lat, height){
+		let calheight = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(lon, lat));
+		if (height == -1){
+			calheight = camera.positionCartographic.height + 1;
+		}
+		console.log(calheight)
+		let position = new Cesium.Cartesian3.fromDegrees(lon, lat, calheight+height);
+		return position;
 	},
 
 	// ** Methods **//
@@ -279,11 +271,11 @@ export default {
 	*/
 	takeScreen() {
 		//Capture l'image de l'écran
-	    var screen = viewer.canvas.toDataURL('image/jpeg', 1);
+	    let screen = viewer.canvas.toDataURL('image/jpeg', 1);
 
 	    //recuperation de la position du regard de la camera
-		var [lat, lon, height] = cameraLookingAt();
-		var camlook = new Cesium.Cartesian3.fromDegrees(lon, lat, height+15);
+		let [lat, lon, height] = scCameras.cameraLookingAt();
+		let camlook = new Cesium.Cartesian3.fromDegrees(lon, lat, height+15);
 
 		if (!camlook){
 			//position non trouvée
@@ -292,7 +284,7 @@ export default {
 			return;
 		}
 		//Ajout le pins à la carte
-		var entity = addPinToScene("Copie d'écran utilisateur", 'Unknown', 'UserScreen', screen, camlook, './../public/icons/user_screen.png', 0.1);	
+		let entity = addPinToScene("Copie d'écran utilisateur", 'Unknown', 'UserScreen', screen, camlook, './../public/icons/user_screen.png', 0.1);	
 
 		//Event pour faire un appel rest sur l'url flickR
 		Event.$emit('fireAddDescription', entity);
@@ -306,34 +298,33 @@ export default {
 	*/
 	addPicture(picture){
 	    //recuperation de la position du regard de la camera
-	    var height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(picture.yposition, picture.xposition));
+	    let height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(picture.yposition, picture.xposition));
 		if (!height){
 			//position non trouvée
 			console.error('Erreur dans la récupération de la position du commentaire');
 			alert("Ne cliquez pas en l'air =");
 			return;
 		}
-		var camlook = new Cesium.Cartesian3.fromDegrees(picture.yposition, picture.xposition, height+15);
-		var [lat, lon, height] = cameraLookingAt();
+		let camlook = new Cesium.Cartesian3.fromDegrees(picture.yposition, picture.xposition, height+15);
+		
 
 		//Ajout le pins à la carte
-		var entity = addPinToScene("Image importée utilisateur", 'Unknown', 'UserPicture', picture, camlook, '/icons/image2.png', 0.05);	
+		let entity = addPinToScene("Image importée utilisateur", 'Unknown', 'UserPicture', picture, camlook, '/icons/image2.png', 0.05);	
 	},
 
 	addNewArtifact(artifact){
 		//recuperation de la position du regard de la camera
-	    var height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(artifact.yposition, artifact.xposition));
+	    let height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(artifact.yposition, artifact.xposition));
 		if (!height){
 			//position non trouvée
 			console.error("Erreur dans la récupération de la position de l'artéfact");
 			alert(":( Oh Noo ! <br> J'ai rencontré un problème pour récupérer la position de l'élément ... Pouvez-vous recommencer, s'il vous plait ?");
 			return;
 		}
-		var camlook = new Cesium.Cartesian3.fromDegrees(artifact.yposition, artifact.xposition, height+15);
-		var [lat, lon, height] = cameraLookingAt();
-
+		let camlook = new Cesium.Cartesian3.fromDegrees(artifact.yposition, artifact.xposition, height+15);
+		
 		//Ajout le pins à la carte
-		var entity = addPinToScene("Artifact", artifact.user, artifact.opinion, artifact.category, artifact.picture, artifact.usercomment, camlook,  0.1);
+		let entity = addPinToScene("Artifact", artifact.title, artifact.user, artifact.category, artifact.opinion, artifact.attendance, artifact.picture, artifact.usercomment, artifact.address, artifact.centrality,  camlook,  0.08);
 	},
 
 	/**
@@ -346,17 +337,17 @@ export default {
 	*/
 	addCom(comment){
 	    //recuperation de la position du regard de la camera
-		var height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(comment.yposition, comment.xposition));
+		let height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(comment.yposition, comment.xposition));
 		if (!height){
 			//position non trouvée
 			console.error('Erreur dans la récupération de la position du commentaire');
 			alert("Ne cliquez pas en l'air =)");
 			return;
 		}
-		var camlook = new Cesium.Cartesian3.fromDegrees(comment.yposition, comment.xposition, height+15);
+		let camlook = new Cesium.Cartesian3.fromDegrees(comment.yposition, comment.xposition, height+15);
 
 		//Ajout le pins à la carte
-		var entity = addPinToScene("Commentaire utilisateur", '', 'UserComment', comment, camlook, 'icons/comment2.png', 0.05);	
+		let entity = addPinToScene("Commentaire utilisateur", '', 'UserComment', comment, camlook, 'icons/comment2.png', 0.05);	
 	},
 
 
@@ -366,19 +357,19 @@ export default {
 		Ajout de l'handler qui console les coordonnées de la souris pour le mode débug
 	*/	
 	addMouseCoordinates(){
-		var printcoordinates = new Cesium.ScreenSpaceEventHandler(viewer); 
+		let printcoordinates = new Cesium.ScreenSpaceEventHandler(viewer); 
 		printcoordinates.setInputAction((evt) => {
-			var ellipsoid = Cesium.Ellipsoid.WGS84;
-		    var clickposition = new Cesium.Cartesian2(evt.x,evt.y);
-            var cartesian = camera.pickEllipsoid(clickposition, ellipsoid);
+			let ellipsoid = Cesium.Ellipsoid.WGS84;
+		    let clickposition = new Cesium.Cartesian2(evt.x,evt.y);
+            let cartesian = camera.pickEllipsoid(clickposition, ellipsoid);
             if (cartesian) {         
 
-                var ray = viewer.camera.getPickRay(clickposition);
-                var cartesian = viewer.scene.globe.pick(ray, viewer.scene);
-                var cartographic = Cesium.Ellipsoid.WGS84.cartesianToCartographic(cartesian);
+                let ray = viewer.camera.getPickRay(clickposition);
+                let cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+                let cartographic = Cesium.Ellipsoid.WGS84.cartesianToCartographic(cartesian);
 
-                var longitudeString = Cesium.Math.toDegrees(cartographic.longitude);
-                var latitudeString = Cesium.Math.toDegrees(cartographic.latitude);
+                let longitudeString = Cesium.Math.toDegrees(cartographic.longitude);
+                let latitudeString = Cesium.Math.toDegrees(cartographic.latitude);
 			}
 		}, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 	},
@@ -389,24 +380,24 @@ export default {
 	addFeatureSelectionHandler() {
 
 		//feature actuellement selectionnée
-		var current_feature = {
+		let current_feature = {
 		    feature: undefined,
 		    originalColor: new Cesium.Color()
 		};
 
 		//feature actuellement survollée
-		var highlighted_feature = {
+		let highlighted_feature = {
 		    feature: undefined,
 		    originalColor: new Cesium.Color()
 		};
 
         //Objet actuellement en mémoire pour un affichage dans l'infobox
-		var selectedEntity = new Cesium.Entity();
+		let selectedEntity = new Cesium.Entity();
 
 		// ** Mouse Move ** //
 
 		// Déclaration d'un handler "mousemove" pour colorier les features survollées
-		var highlighthandling = new Cesium.ScreenSpaceEventHandler(viewer.canvas); 
+		let highlighthandling = new Cesium.ScreenSpaceEventHandler(viewer.canvas); 
 		highlighthandling.setInputAction(function onMouseMove(movement) {
 		    // If a feature was previously highlighted, undo the highlight
 		    if (Cesium.defined(highlighted_feature.feature)) {
@@ -415,7 +406,7 @@ export default {
 		    }
 
 		    // Pick a new feature
-		    var pickedFeature = viewer.scene.pick(movement.endPosition);
+		    let pickedFeature = viewer.scene.pick(movement.endPosition);
 		    if (!Cesium.defined(pickedFeature)) {
 		        return;
 		    }
@@ -437,10 +428,10 @@ export default {
 		// ** Mouse Left Click ** //
 
 		//Selection au click
-		var clickHandler = viewer.screenSpaceEventHandler.getInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+		let clickHandler = viewer.screenSpaceEventHandler.getInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
 		// Color la feature selectionnée et affiche son infobox
-		var selectionhandling = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
+		let selectionhandling = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
 		selectionhandling.setInputAction(function onLeftClick(movement) {
 		    // If a feature was previously selected, undo the highlight
 		    if (Cesium.defined(current_feature.feature)) {
@@ -449,7 +440,7 @@ export default {
 		    }
 
 		    // Pick a new feature rattaché à l'handleur clickHandler
-		    var pickedFeature = viewer.scene.pick(movement.position);
+		    let pickedFeature = viewer.scene.pick(movement.position);
 		    if (!Cesium.defined(pickedFeature)) {
 		        clickHandler(movement);
 		        return;
@@ -473,7 +464,7 @@ export default {
 		        pickedFeature.color = Cesium.Color.LIME;
 		        // Set feature infobox description 
 		        
-		        var featureName = pickedFeature.getProperty('name');
+		        let featureName = pickedFeature.getProperty('name');
 
 		        selectedEntity.name = featureName;
 		        if (typeof pickedFeature.content.batchTable.batchTableJson.Height != "undefined"){
@@ -495,7 +486,7 @@ export default {
 	
 		        	addScreenshotDescription(pickedFeature.id,"Element complémentaire d'information");
 
-		        }else if (pickedFeature.id._title==='Artifact'){
+		        }else if (pickedFeature.id._topic==='Artifact'){
 
 		        	addScreenshotDescription(pickedFeature.id);
 		        
@@ -519,13 +510,13 @@ export default {
 		@emit : Appel RESTAPI sur les photos
 	*/
 	addflickRPicHandler(position, flickR, page=1){
-		var vueOldPosition = position;
+		let vueOldPosition = position;
 
 		//Listener a chaque fin de déplacement de caméra
 		camera.moveEnd.addEventListener((event) => { 
 
 			//Récupération du regard de la caméra
-			var [vueNewLat,vueNewLon,vueNewHeight] = cameraLookingAt();
+			let [vueNewLat,vueNewLon,vueNewHeight] = scCameras.cameraLookingAt();
 
 			//Changement du set d'image si la caméra c'est assez déplacée
 			if (Math.abs(vueOldPosition.lat-vueNewLat)>0.01 || Math.abs(vueOldPosition.lon-vueNewLon)>0.01){
@@ -537,7 +528,7 @@ export default {
 				if(ds.entities._entities._array.length>0){
 
 					//Récupère seulement les images de type FlickR
-					var flickREntities = ds.entities._entities._array.filter( entity => entity._type === "FlickR" );
+					let flickREntities = ds.entities._entities._array.filter( entity => entity._type === "FlickR" );
 					for (var i = 0; i<flickREntities.length; i++){
 
 						ds.entities.remove(flickREntities[i])
@@ -545,7 +536,7 @@ export default {
 				}
 
 				//Déclaration des options
-				var options = {
+				let options = {
 					'method':'flickr.photos.search',
 					'api_key':flickR.apikey,
 					'lat':vueOldPosition.lat,
@@ -576,16 +567,16 @@ export default {
 		}
 		pics = getRandomItems(pics, flickrPicturesNumber) 
 
-		for (var p in pics){
+		for (let p in pics){
 			//récupération d'une image
-			var image = pics[p];
+			let image = pics[p];
 
 			//Get height et si défini on continue l'affichage
-			var height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(image.longitude, image.latitude));
+			let height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(image.longitude, image.latitude));
     		if(typeof height === 'undefined'){
     			break;
     		}
-            var positionImage = new Cesium.Cartesian3.fromDegrees(image.longitude, image.latitude, height+15);
+            let positionImage = new Cesium.Cartesian3.fromDegrees(image.longitude, image.latitude, height+15);
             //Ajout un pin's à la carte
             addPinToScene(image.title, image.owner, 'FlickR', image.url_l, positionImage, './../publicpublic/icons/Creatures.png', 0.04);	
       	}
@@ -597,14 +588,13 @@ export default {
 		@param photos : (obj) un set d'images
 	*/
 	addHistoryContext(photos){
-		for (var i = 0; i < photos.length; i++){
-			var pic = photos[i];
-			var height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(pic.icon.lon, pic.icon.lat));
-			var positionImage = new Cesium.Cartesian3.fromDegrees(pic.icon.lon, pic.icon.lat, height+15);
-			var description = "http://localhost:8080/public/"+pic.folder+pic.name+".jpg"; 
+		for (let i = 0; i < photos.length; i++){
+			let pic = photos[i];
+			let height = scene.globe.getHeight(Cesium.Cartographic.fromDegrees(pic.icon.lon, pic.icon.lat));
+			let positionImage = new Cesium.Cartesian3.fromDegrees(pic.icon.lon, pic.icon.lat, height+15);
+			let description = "http://localhost:8080/public/"+pic.folder+pic.name+".jpg"; 
 			addPinToScene("Place de la Riponne", 'Municipalité', 'History', description, positionImage, './../public/icons/present.png', 0.3);
 		}
-
 	},
 
 	/**
@@ -615,10 +605,11 @@ export default {
 	addMap2DHandler(){
 		/*Handler de mise à jour de carte !*/
 		camera.moveEnd.addEventListener(function() { 
-			var [lat, lon, height] = cameraLookingAt();
-			var position = [Cesium.Math.toDegrees(camera.positionCartographic.longitude),Cesium.Math.toDegrees(camera.positionCartographic.latitude)];
-			var direction = [lat,lon];
-		    Event.$emit('Update2Dmap', position, direction, camera.heading);
+			let [lat, lon, height] = scCameras.cameraLookingAt();
+			let position = [Cesium.Math.toDegrees(camera.positionCartographic.longitude),Cesium.Math.toDegrees(camera.positionCartographic.latitude)];
+			let direction = [lat,lon];
+			let zoom = scCameras.detectZoomLevel();
+		    Event.$emit('Update2Dmap', position, direction, camera.heading, zoom - 1);
 		});
 	},
 
@@ -628,10 +619,10 @@ export default {
 		Ajout de 1 handler à la scène : mouse click et mouse move
 	*/
 	drawOnScene(){
-		  var color;
-		  var polyline;
-		  var drawing = false;
-		  var positions = [];
+		  let color;
+		  let polyline;
+		  let drawing = false;
+		  let positions = [];
 		  drawingHandler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
 		  drawingHandler.setInputAction(
 		      function (click) {
@@ -671,8 +662,8 @@ export default {
 		      	  
 
 		          //var surfacePosition = camera.pickEllipsoid(movement.endPosition);
-		           var ray = viewer.camera.getPickRay(movement.endPosition);
-		           var surfacePosition = viewer.scene.globe.pick(ray, viewer.scene);
+		           let ray = viewer.camera.getPickRay(movement.endPosition);
+		           let surfacePosition = viewer.scene.globe.pick(ray, viewer.scene);
 		           
 		           //var ellipsoid = Cesium.Ellipsoid.WGS84;
 		      	   
@@ -700,10 +691,10 @@ export default {
 	*/
 	undoDrawOnScene(){
 		//filtre sur les entité et récupération des type sketches seulement
-		var sketches = viewer.entities._entities._array.filter(entity => entity._type === 'Sketch')
+		let sketches = viewer.entities._entities._array.filter(entity => entity._type === 'Sketch')
 		if (sketches.length != 0){
 			//suppression de l'élément par id
-			var sketch = sketches.pop();
+			let sketch = sketches.pop();
 			viewer.entities.removeById(sketch._id)
 		}else{
 			console.warn('Toutes les sketches ont déjà été supprimés')

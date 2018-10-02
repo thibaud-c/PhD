@@ -31,9 +31,8 @@
 	    "scene3DOnly":true,
 	    "animation" : false,
 	    "terrainExaggeration" : 1.0,
-	    "navigationInstructionsInitiallyVisible": false,
+	    "navigationInstructionsInitiallyVisible": true,
 	    "navigationHelpButton": false,
-	    "selectionIndicator" : false,
 	    "contextOptions": {
     		"webgl": {
     			"preserveDrawingBuffer": true

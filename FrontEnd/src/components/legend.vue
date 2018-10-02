@@ -4,16 +4,6 @@
     v-card(flat)
       v-card-title
         .title.font-weight-bold {{text.title.fr}}
-			
-      //Contributions
-      span.pl-2.grey--text {{text.review.fr}}
-      div(v-for="(opinion,key) in get_unlock_opinions()")
-        v-card-actions.pa-0.pl-4
-          v-checkbox(flat small :color='opinion.color' :label="opinion.text" v-model="opinion.showlayer" height="0")
-          v-btn.mr-5(icon small flat :color='opinion.color' @click='opinion.showinfo = !opinion.showinfo')
-            v-icon {{ opinion.showinfo ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}
-        v-slide-y-transition
-          v-card-text.pa-0.pl-2(v-show='opinion.showinfo') {{opinion.description}}
 
       //Thématiques
       span.pl-2.mt-5.grey--text {{text.topic.fr}}
@@ -22,7 +12,7 @@
           v-checkbox(flat small :label="categorie.text" color="indigo darken-3" v-model="categorie.showlayer" height="0")
           v-btn.mr-5(icon small flat color="indigo darken-3" @click='categorie.showinfo = !categorie.showinfo')
             v-icon {{ categorie.showinfo ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}
-        v-avatar.pl-5.ml-4(size="30" tile)
+        v-avatar.pl-5.ml-4(size="50" tile)
           img(:src='categorie.icon')
         v-slide-y-transition
           v-card-text.pa-0.pl-2.pt-2(v-show='categorie.showinfo') {{categorie.description}}

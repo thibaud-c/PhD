@@ -1,0 +1,32 @@
+[
+	{
+		"title": "Pas du tout satisfait",
+		"value": "1"
+	},
+	{
+		"title": "Pas satisfait",
+		"value": "2"
+	},
+		{
+		"title": "Plutôt pas satisfait",
+		"value": "3"
+	},
+		{
+		"title": "Indifférent",
+		"value": "4"
+	},
+		{
+		"title": "Plutôt satisfait",
+		"value": "5"
+	},
+			{
+		"title": "Satisfait",
+		"value": "6"
+	},
+			{
+		"title": "Tout à fait satisfait",
+		"value": "7"
+	}
+] 
+
+

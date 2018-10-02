@@ -1,25 +1,25 @@
 [
 	{
-		"text":"Parc",
-		"icon":"/icons/parc.png",
+		"text":"Espaces publics",
+		"icon":"/icons/colored_publicspace.png",
 		"id":"0",
 		"showinfo":false,
-		"description":"blabla une description pour Valoriser",
+		"description":"Rues, places, parcs",
 		"showlayer":true,
         "isActive":true
 	},
 	{
-		"text":"Bâti",
-		"icon":"/icons/building.png",
+		"text":"Bâtiments",
+		"icon":"/icons/colored_buildings.png",
 		"id":"1",
 		"showinfo":false,
-		"description":"blabla une description pour Valoriser",
+		"description":"Tout ce qui est en rapport avec des bâtiments",
 		"showlayer":true,
         "isActive":true
 	},
 	{
-		"text":"Rue",
-		"icon":"/icons/street.png",
+		"text":"Mobliliers urbains",
+		"icon":"/icons/colored_streetfournitures.png",
 		"id":"2",
 		"showinfo":false,
 		"description":"blabla une description pour Valoriser",
@@ -27,20 +27,11 @@
         "isActive":true
 	},
 	{
-		"text":"Place",
-		"icon":"/icons/square.png",
+		"text":"Autre",
+		"icon":"/icons/colored_other.png",
 		"id":"3",
 		"showinfo":false,
-		"description":"blabla une description pour Valoriser",
-		"showlayer":true,
-        "isActive":true
-	},
-		{
-		"text":"Autre",
-		"icon":"/icons/other.png",
-		"id":"4",
-		"showinfo":false,
-		"description":"blabla une description pour Valoriser",
+		"description":"Tout ce qui n'appartient pas aux autres catégories : Point de vue, plante, arbre, etc.",
 		"showlayer":true,
         "isActive":true
 	}

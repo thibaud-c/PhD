@@ -2,11 +2,10 @@
 #participation
 	v-flex.bottom-position(xs6 offset-xs2 fuild)
 		//Menu participation
-		v-menu(:close-on-content-click="false" max-width="500" offset-overflow transition="scale-transition" max-height="200" @click.native="showRMenu = true;setXYposition()")
-			v-btn(slot="activator" color="indigo darken-3" dark small) {{text.title.fr}}
-			addArtifactMenu(v-show='showRMenu')
+
+		v-btn(color="indigo darken-3" dark small @click='OpenaddArtifactPanel()') {{text.title.fr}}
 	// Icon clicked here 
-	v-avatar.aim-position(size="40" tile)
+	v-avatar.aim-position(size="30" tile)
 		img(src="/icons/click.png")
 </template>
 
@@ -51,7 +50,18 @@
 			setXYposition(){
 				Event.$emit('fireSetXY', window.innerHeight/2, window.innerWidth/2);
 				console.log('##__EMIT -> fireSetXY '+ window.innerHeight/2 +' _ '+ window.innerWidth/2 +'__##');
-			}
+			},
+			OpenaddArtifactPanel(){
+				this.initgeocode();
+		        Event.$emit('fireOpenaddArtifact');
+		        console.log('##__EMIT ->  fireOpenaddArtifact __##');
+	    	},
+	    	initgeocode(){
+	        	let yposition = window.innerHeight/2;
+				let xposition = window.innerWidth/2;
+	        	Event.$emit('fireGetAddressFromPixels', xposition, yposition);
+				console.log('##__EMIT ->  fireGetAddressFromPixels__##');
+        	},
 		},
       	mounted() {
       		Event.$on('fireCloseaddArtifactMenu', () => {
@@ -60,6 +70,8 @@
         	Event.$on('fireCloseAllMenu', () => {
         		this.closeMenu();
 			});
+			    //Open add artifact panel
+	
 	  	}
 	}
 
