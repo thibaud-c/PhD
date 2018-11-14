@@ -260,4 +260,7 @@ export default {
 .full-width{
 	width:100% !important;
 }
+.sidebar{
+	z-index: 5;
+}
 </style>

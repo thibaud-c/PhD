@@ -21,7 +21,7 @@
 	},
 	"CESIUM_SCENE_OPTION":{
 		"homeButton": false,
-		"baseLayerPicker":false,
+		"baseLayerPicker":true,
 		"geocoder":false,
 		"selectionIndicator": false,
 		"timeline": false,

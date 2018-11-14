@@ -57,7 +57,7 @@ function addBuildings() {
 		})
 		//Ajout d'un style
 		bati3d.style = new Cesium.Cesium3DTileStyle({
-		    color :  "color('grey')",
+		    color :  "color('grey',1)",
 		    meta : {
 		       description : '"Building id has height."'
 		   }
@@ -81,7 +81,7 @@ function addVegetation() {
 
 		//Ajout d'un style
 		vege3d.style = new Cesium.Cesium3DTileStyle({
-			//color :  "color('STEELBLUE')",
+			color :  "color('grey',1)",
 		   	meta : {
 		       description : '"Three id has height."'
 		   }
@@ -169,6 +169,7 @@ export default {
 	        }),
 	        rectangle: rectangle
 	    }));
+	    
 
 		//Ajout des ombres
 		var shadowMap = viewer.shadowMap;
@@ -182,8 +183,16 @@ export default {
 		//Suppression des crédit
 		scene.globe.depthTestAgainstTerrain = true;
 
-		//Ajout de la détection avec le terrain
-		scene.screenSpaceCameraController.enableCollisionDetection = true;
+		//avoid to have the camera underground
+	    camera.enableTerrainAdjustmentWhenLoading = false;
+ 	
+	    var controller = scene.screenSpaceCameraController;
+	    controller.enableCollisionDetection = false;
+		controller.minimumZoomDistance = 1;
+		controller.maximumZoomDistance = 3000;
+
+		camera._suspendTerrainAdjustment = false;  //added
+
 
 		scene.sun.show = true;
 		scene.skyAtmosphere.show = true;

@@ -1,12 +1,12 @@
 <template lang="pug">
 
-	#sb-search.sb-search.levelOneIndex
+	#sb-search.sb-search.adddepth
 		form
 			input#search.sb-search-input(v-model="address" :placeholder='text.searchbar.fr', type='search', value='', name='search')
 			input.sb-search-submit(@click="geocodeAddress()" value='')
 			span.sb-icon-search
 
-		v-snackbar(v-model='snackbar' left :timeout='timeout' top color='cyan darken-2') {{ camMovedto }}
+		v-snackbar.adddepth(v-model='snackbar' left :timeout='timeout' top color='cyan darken-2') {{ camMovedto }}
 			v-btn(color='white' flat @click='snackbar = false') {{text.close.fr}}
 </template>
 
@@ -59,7 +59,7 @@
 </script>
 	
 <style>
-  .levelOneIndex{
-  	z-index:0;
+  .adddepth{
+  	z-index: 0;
   }
-</style>
+ </style>

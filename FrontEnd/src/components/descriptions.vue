@@ -358,5 +358,6 @@ export default {
   .sidebar{
     height: calc(100% - 40px) !important;
     top:40px !important;
+    z-index: 5;
   }
 </style>

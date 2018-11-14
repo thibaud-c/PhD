@@ -28,14 +28,16 @@ export default {
 		    	street = response.data.staddress;
 		    	number = response.data.stnumber;
 		    }
+		    let position=[lat,long]
+		    
 		    console.log(response)
 		    console.log('##__EMIT ->  fireUpdateAddress - Success __##')
-		    Event.$emit('fireUpdateAddress', street+" "+number+", "+city);
+		    Event.$emit('fireUpdateAddress', street+" "+number+", "+city, position);
 
 		  }).catch(function (error) {
 		  	console.log(error)
 		  	console.log('##__EMIT ->  fireUpdateAddress - Error __##')
-		    Event.$emit('fireUpdateAddress', 'Aucune addresse trouvée...');
+		    Event.$emit('fireUpdateAddress', 'Aucune addresse trouvée...', position);
 		  })
 	},
 
