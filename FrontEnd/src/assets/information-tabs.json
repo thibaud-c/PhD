@@ -1,17 +1,96 @@
 [
 	{
-		"title":"Résumé",
+		"title":"Bienvenue",
 		"description":"<strong>Pour déposer une idée</strong> sur la carte, commenter ou voter, vous devez au préalable vous connecter, en haut à droite de l’écran avec un courriel (suivez les instructions), un compte Facebook ou un compte Google+ (Gmail).",
         "isActive":true
 	},
 	{
-		"title":"Participer",
-		"description":"Une fois <strong>connecté</strong> avec votre compte (voir la rubrique « ajouter »), <br>vous pouvez voter favorablement ou défavorablement aux idées déposées sur la carte par d’autres.Le vote est ouvert aussi bien sur les éléments de projet présentés par les acteurs publics, que sur les bulles ajoutées par d’autres internautes.",
+		"title":"Vos fréquentations",
+		"description":"<strong>Quels lieux fréquentez vous ?</strong><br>Cliquer sur une des catégories à droite du menu et 'Ajouter une nouvelle adresse' avec un <strong>click droit</strong> ou 'Compléter une fréquentation' sur une adresse déjà référencé en effectuant un <strong>click gauche</strong> sur un des proint présent sur la carte",
+        "options":[
+        	{
+        		"tooltip":"Place",
+        		"icon":"/icons/cat_square.png",
+        		"action":"addPlace",
+        		"active":false,
+        		"color":"white"
+        	},
+        	{
+        		"tooltip":"Rue",
+        		"icon":"/icons/cat_street.png",
+        		"action":"addPlace",
+        		"active":false,
+        		"color":"white"
+        	},
+        	{
+        		"tooltip":"Batiment",
+        		"icon":"/icons/cat_building.png",
+        		"action":"addPlace",
+        		"active":false,
+        		"color":"white"
+        	},
+        	{
+        		"tooltip":"Parc",
+        		"icon":"/icons/cat_parc.png",
+        		"action":"addPlace",
+        		"active":false,
+        		"color":"white"
+        	}
+        ],
         "isActive":true
 	},
 	{
-		"title":"Contrôles",
-		"description":"<iframe src='https://giphy.com/embed/l1KVcrdl7rJpFnY2s' width='200' height='150' frameBorder='0' class='giphy-embed' allowFullScreen></iframe>",
+		"title":"Vos usages",
+		"description":"<strong>Quelles sont vos appréciations ?</strong><br>Cliquer sur une des catégories à droite du menu et 'Ajouter une nouvelle adresse' avec un <strong>click droit</strong> ou 'Compléter une appéciation' sur une adresse déjà référencé en effectuant un <strong>click gauche</strong> sur un des proint présent sur la carte",
+        "options":[
+        	{
+        		"tooltip":"Place",
+        		"icon":"/icons/cat_square.png",
+        		"action":"addPlace",
+        		"active":false,
+        		"color":"white"
+        	},
+        	{
+        		"tooltip":"Rue",
+        		"icon":"/icons/cat_street.png",
+        		"action":"addPlace",
+        		"active":false,
+        		"color":"white"
+        	},
+        	{
+        		"tooltip":"Batiment",
+        		"icon":"/icons/cat_building.png",
+        		"action":"addPlace",
+        		"active":false,
+        		"color":"white"
+        	},
+        	{
+        		"tooltip":"Parc",
+        		"icon":"/icons/cat_parc.png",
+        		"action":"addPlace",
+        		"active":false,
+        		"color":"white"
+        	},
+        	{
+        		"tooltip":"Végétation",
+        		"icon":"/icons/cat_vegetation.png",
+        		"action":"addPlace",
+        		"active":false,
+        		"color":"white"
+        	},
+        	{
+        		"tooltip":"Point de vue",
+        		"icon":"/icons/cat_viewpoint.png",
+        		"action":"addPlace",
+        		"active":false,
+        		"color":"white"
+        	}
+        ],
+        "isActive":true
+	},
+	{
+		"title":"Qui êtes-vous ?",
+		"description":"sociographie",
         "isActive":true
 	}
 ]

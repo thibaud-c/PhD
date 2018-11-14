@@ -4,6 +4,7 @@ import Main from './Main.vue'
 import Admin from './Admin.vue'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.css'
+import 'lesshat/lesshat.less'
 import circleSlider from 'vue-circle-slider'
 
 // Import external librairies

@@ -3,20 +3,20 @@
 
 // Vuetify Initialisation (css styling)
 v-app
-  
+
   // Toolbar
-  v-toolbar.put-on-top(dark color="error" height="40")
-    v-avatar(size="50")
-      img(src="/icons/Lausanne.png")
-    v-toolbar-title.white--text {{ text.title.fr }}
+  v-toolbar.put-on-top(dark color="white" height="40")
+    v-avatar(size="40")
+      img(src="/icons/Accueil.png")
+    v-toolbar-title.indigo--text {{ text.title.fr }}
     v-spacer
     v-toolbar-items.sm-and-down
-      v-btn(flat small @click.native='connexiondialog = true') {{ text.login.fr }}
-      v-btn(flat icon small @click="infodialog = true")
+      v-btn(flat small color="indigo darken-3" @click.native='connexiondialog = true') {{ text.login.fr }}
+      v-btn(flat icon small color="indigo darken-3" @click="infodialog = true")
         v-icon fas fa-info-circle
   
   // Infomation modal 
-  v-dialog(v-model='infodialog', max-width='300')
+  //v-dialog(v-model='infodialog', max-width='300')
     v-tabs(v-model='infotabs', color='error', dark, slider-color='yellow' height="30")
       v-tab(v-for='(tabs,index) in get_information_tabs()', :key='index', ripple) {{tabs.title}}
       v-tab-item(v-for='(tabs,index) in get_information_tabs()', :key='index')
@@ -84,26 +84,38 @@ v-app
   cesiumVE
   
   // Corner menu
-  quickMenu.is-clickable.add-visible(:menu-count='count_unlock_menu()', :icon-class='get_unlock_icons()', :menu-url-list='get_unlock_actions()', :position='position', :backgroundColor='color')
+  //quickMenu.is-clickable.add-visible(:menu-count='count_unlock_menu()', :icon-class='get_unlock_icons()', :menu-url-list='get_unlock_actions()', :position='position', :backgroundColor='color')
   
   
   // Side bar description
   description(v-show='isDescriptionVisible' :information="desciptionData" )
-
+  artCreation
+  artDescription
   // right corner maps
-  floatingMaps
+  //floatingMaps
+
+
 
   // Menus
   SceneOptions(v-show='is_menu_active(0)')
   ParticipativeOptions(v-show='is_menu_active(1)')
   SurveyForm(v-show='is_menu_active(2)')
   Legend(v-show='is_menu_active(3)')
+  
+  
 
   //searchBar
   searchBar.rightposition
 
+  //Target
+  pov_CentralTarget
 
+  //2D localization maps 
+  maps_2DPosition
 
+  //Participation wizard
+  //ParticipationMenu.positionparticipation
+  wizardParticipation
 </template>
 
 <script>
@@ -117,7 +129,13 @@ v-app
   import description from './components/descriptions.vue'
   import Legend from './components/legend.vue'
   import searchBar from './components/searchBar.vue'
-  
+  import ParticipationMenu from './components/ParticipationMenu.vue'
+  //new components
+  import pov_CentralTarget from './components/pointofview.vue'
+  import maps_2DPosition from './components/localizationmaps.vue'
+  import wizardParticipation from './components/wizardparticipation.vue'
+  import artCreation from './components/artifactsWizard.vue'
+  import artDescription from './components/artifactsDescription.vue'
 
 
   // Components imports
@@ -142,14 +160,20 @@ v-app
       SurveyForm,
       description,
       Legend,
-      searchBar
+      searchBar,
+      ParticipationMenu,
+      pov_CentralTarget,
+      maps_2DPosition,
+      wizardParticipation,
+      artCreation,
+      artDescription
     },
     
     data () {
       return {
         text:{
           title:{
-            fr:'Mon quartier, ma ville'
+            fr:'Je participe à construire la ville de demain !'
           },
           login:{
             fr:'Se Connecter'
@@ -330,6 +354,9 @@ v-app
 </script>
 
 <style>
+  .absolute-position{
+    position: absolute;
+  }
   .small-height{
     height:10%;
   }
@@ -337,7 +364,11 @@ v-app
     z-index: 5;
   }
 
-
+  .positionparticipation{
+    left:2%;
+    top:5%;
+    position:absolute;
+  }
 
   .put-at-bottom{
     bottom: 0.5%;

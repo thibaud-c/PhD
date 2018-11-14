@@ -1,7 +1,7 @@
 <template lang="pug">
   // description du composant cesium et attribution de l'id
   #root
-    #cesiumRoot.cesium-VE(@contextmenu.prevent="showRightMenu")
+    #cesiumRoot.cesium-VE(@contextmenu.prevent="createArtifactAtPosition($event)")
     artifactPanel.pa-2(:xposition="xMenu" :yposition="yMenu" :categorie="categorieIcon" :opinion="opinionColor" v-show="isArtifactActiv")
 
 </template>
@@ -28,6 +28,8 @@
   import scElements from './../js/sceneElements.js'
   import scCameras from './../js/sceneCamerasHandlers.js'
   import scControllers from './../js/sceneControllers.js'
+  import artControl from './../js/artifactsControllers.js'
+
   //Data bases relation imports
   import dao from './../js/DataAccessObjects.js'
   //Geocoder
@@ -54,6 +56,7 @@
                   fr:'Importer une image'
                 },
           },
+          category:"",
           opinionOptions:opinionOptions,
           categoriesOptions:categoriesOptions,
           categorieIcon:"",
@@ -65,6 +68,7 @@
           showcommentpannel:true,
           xMenu: 0,
           yMenu: 0,
+          isClickListerner:false,
           isCommentActiv: false,
           isArtifactActiv: false,
           actionlist:[
@@ -121,16 +125,31 @@
           this.isArtifactActiv = true;
         },
         showRightMenu (e) {
-              e.preventDefault()
-              this.showRMenu = false
-              this.xMenu = e.clientX
-              this.yMenu = e.clientY
-              this.$nextTick(() => {
-                  this.showRMenu = true
-              })
-          }
+          e.preventDefault()
+          this.showRMenu = false
+          this.xMenu = e.clientX
+          this.yMenu = e.clientY
+          this.$nextTick(() => {
+            this.showRMenu = true
+          })
         },
-
+        createArtifactAtPosition(e) {
+          if(!this.isClickListerner){
+            return
+          }
+          e.preventDefault()
+          //-40 size icon
+          let position = scControllers.getlonlatfromxy(e.clientX, e.clientY-40);
+          // Delete Temporary before add new
+          artControl.removeallTemporaryArtifact();
+          artControl.addTemporaryArtifact(position);
+          Event.$emit('fireOpenArtifactWizard');
+          Event.$emit('fireGetAddressFromPixels', e.clientX, e.clientY);
+          console.log('##__EMIT ->  fireAddDefaultArtifact__##');
+        }
+      },
+        
+        
 
         /** 
 
@@ -141,8 +160,31 @@
         
         console.warn('CesiumVirtualGlobe.vue loaded')
 
+        Event.$on('fireStartListenToRClick', (cat) => {
+          this.category=cat;
+          this.isClickListerner=true;
+        });
+
+        Event.$on('fireStopListenToRClick', () => {
+          this.isClickListerner=false;
+        });
+
         Event.$on('fireCloseaddArtifactMenu', () => {
           this.showRMenu=false;
+        });
+
+        Event.$on('CreateFrequencyArtifact', (position,data) => {
+          data.category = this.category;
+          artControl.removeallTemporaryArtifact();
+
+          artControl.addFrequencyArtifact(position, data);
+        });
+
+        Event.$on('CreateCustomArtifact', (position,data) => {
+          data.category = this.category;
+          artControl.removeallTemporaryArtifact();
+
+          artControl.addCustomArtifact(position, data);
         });
 
         Event.$on('fireOpenaddArtifact', () => {
@@ -199,6 +241,7 @@
         //Parameters inbitialisation to CameraHandler & Scenecontrolleur
         scCameras.sceneCameraHandlerConstructor(scElements.getCesiumViewer());
         scControllers.sceneControllersConstructor(scElements.getCesiumViewer());
+        artControl.artifactsControllerConstructor(scElements.getCesiumViewer());
 
         //camera position into the VE
         scCameras.setCameraPosition(initConfig.CAMERA_INIT);

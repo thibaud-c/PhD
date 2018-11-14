@@ -140,6 +140,13 @@ function addScreenshotDescription(feature){
 	Event.$emit('fireDisplayDescription', data);
 };
 
+function showFrequencyDescription(feature){
+	console.log(feature.data)
+	console.log("fire")
+	Event.$emit('fireShowFrequencyDescription', feature.data);
+	console.log('##__EMIT ->  fireShowFrequencyDescription__##');
+};
+
 function customStyle() {
     if (Cesium.defined(removeListener)) {
         removeListener();
@@ -458,6 +465,7 @@ export default {
 		    } else {
 		        Cesium.Color.clone(pickedFeature.color, current_feature.originalColor);
 		    }
+		    console.log(pickedFeature.id.entityCollection._owner.toString())
 		    if (typeof pickedFeature.id === "undefined"){
 
 		        // Highlight newly selected feature
@@ -496,6 +504,9 @@ export default {
 		        }else if (pickedFeature.id._type==='UserPicture'){
 
 		        	addScreenshotDescription(pickedFeature.id,"Import Utilisateur");
+		        }else if (pickedFeature.id.type==='FREQ'){
+					
+		        	showFrequencyDescription(pickedFeature.id);
 		        }
 
 		    }  
