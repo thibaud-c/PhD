@@ -50,6 +50,9 @@ export default {
   	Event.$on('fireShowFrequencyDescription', (data) => {
   		this.isDescriptionWizardOpen=true;
     });
+    Event.$on('fireCloseArtifactDescription', () => {
+  		this.isDescriptionWizardOpen=false;
+    });
     Event.$on('fireUpdateContextToCustom', () => {
       this.context='CUSTOM';
     });

@@ -111,23 +111,12 @@ SOFTWARE.
         return this.durationLabels[val]
       },
       close(){
-        this.isDisplayed = false;
-      },
-      save(){
-        let data = {
-          location : this.address,
-          frequency : this.frequency,
-          frequencyLabel : this.frequencyLabels[this.frequency],
-          duration: this.duration,
-          durationLabel : this.durationLabels[this.duration],
-          comment: this.comment
-        }
-        Event.$emit('CreateFrequencyArtifact', this.position, data);
-        console.log('##__EMIT ->  CreateFrequencyArtifact__##');
-        this.close()
+        Event.$emit('fireCloseArtifactDescription');
+        console.log('##__EMIT -> fireCloseArtifactDescription__##');
       },
     }, 
     mounted(){
+      console.log('Hello There')
       Event.$on('fireShowFrequencyDescription', (data) => {
         console.log("on")
         console.log(data)
